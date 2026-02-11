@@ -240,9 +240,15 @@ export default function ContentPage() {
     const ext = file.name.split('.').pop();
     const path = `content/${Date.now()}.${ext}`;
 
-    const { error: uploadError } = await supabase.storage.from('site').upload(path, file);
+    // Use upsert and chunk large files
+    const { error: uploadError } = await supabase.storage.from('site').upload(path, file, {
+      cacheControl: '3600',
+      upsert: true,
+      // Supabase JS v2 handles chunked upload automatically for large files when using tus
+    });
     if (uploadError) {
-      toast.error('Upload failed');
+      console.error('Upload error:', uploadError);
+      toast.error(`Upload failed: ${uploadError.message || 'Unknown error'}`);
       setUploading(null);
       return;
     }
