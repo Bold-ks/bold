@@ -1,0 +1,81 @@
+{
+  "common": {
+    "contactUs": "Na kontaktoni",
+    "addToCart": "Shto në shportë",
+    "viewAll": "Shiko të gjitha",
+    "learnMore": "Mëso më shumë",
+    "price": "Çmimi",
+    "from": "Nga",
+    "specifications": "Specifikimet",
+    "colors": "Ngjyrat",
+    "backTo": "Kthehu te",
+    "home": "Ballina",
+    "about": "Rreth nesh",
+    "contact": "Kontakt",
+    "allProducts": "Të gjitha produktet",
+    "search": "Kërko",
+    "menu": "Menu",
+    "close": "Mbyll",
+    "customProduct": "Produkt i personalizueshëm"
+  },
+  "nav": {
+    "speakers": "Altoparlantë",
+    "headphones": "Dëgjuese",
+    "tv": "TV",
+    "soundbar": "Soundbar",
+    "accessories": "Aksesoarë",
+    "portable": "Të lëvizshëm",
+    "home": "Për Shtëpi",
+    "outdoor": "Për Verandë",
+    "all": "Të gjithë",
+    "audio": "Audio",
+    "projectors": "Projektorë",
+    "multiroom": "Multiroom",
+    "homeTheater": "Home Theater",
+    "radio": "Radio",
+    "soundbarsSubwoofers": "Soundbars & Subwoofers",
+    "bluetoothSpeakers": "Bluetooth Altoparlantë",
+    "amplifiers": "Amplifikatorë"
+  },
+  "home": {
+    "heroTitle": "Arti i tingullit",
+    "heroSubtitle": "Zbuloni koleksionin tonë të kuruar të teknologjisë premium audio dhe vizuale",
+    "brandsTitle": "Brendet tona",
+    "brandsSubtitle": "Tre brendet më prestigjioze në botë",
+    "boDescription": "Dizajn danez ikonik që bashkon tingullin e jashtëzakonshëm me artizanatin e hollë",
+    "devialetDescription": "Inxhinieri revolucionare franceze e tingullit",
+    "loeweDescription": "Teknologji gjermane premium për shtëpinë tuaj",
+    "discoverCollection": "Zbulo koleksionin",
+    "exploreMore": "Eksploro më shumë"
+  },
+  "brand": {
+    "boTagline": "Dizajn danez. Tingull i jashtëzakonshëm.",
+    "devialetTagline": "Inxhinieri e zërit. E reinventuar.",
+    "loeweTagline": "Teknologji premium. Artizanat gjerman.",
+    "viewProducts": "Shiko produktet",
+    "featuredProducts": "Produktet e zgjedhura"
+  },
+  "product": {
+    "techSpecs": "Specifikimet teknike",
+    "selectColor": "Zgjidhni ngjyrën",
+    "contactForPrice": "Na kontaktoni për çmimin",
+    "relatedProducts": "Produkte të ngjashme"
+  },
+  "contact": {
+    "title": "Na kontaktoni",
+    "subtitle": "Jemi këtu për t'ju ndihmuar të gjeni produktin e përsosur",
+    "name": "Emri",
+    "email": "Email",
+    "phone": "Telefoni",
+    "message": "Mesazhi",
+    "send": "Dërgo",
+    "address": "Adresa",
+    "workingHours": "Orari i punës"
+  },
+  "about": {
+    "title": "Rreth Bold",
+    "subtitle": "Partneri juaj i besuar për teknologjinë premium audio dhe vizuale në Kosovë",
+    "story": "Historia jonë",
+    "mission": "Misioni ynë"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "common": {
+    "contactUs": "Contact us",
+    "addToCart": "Add to cart",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "price": "Price",
+    "from": "From",
+    "specifications": "Specifications",
+    "colors": "Colors",
+    "backTo": "Back to",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "allProducts": "All products",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "customProduct": "Customizable product"
+  },
+  "nav": {
+    "speakers": "Speakers",
+    "headphones": "Headphones",
+    "tv": "TV",
+    "soundbar": "Soundbar",
+    "accessories": "Accessories",
+    "portable": "Portable",
+    "home": "Home",
+    "outdoor": "Outdoor",
+    "all": "All",
+    "audio": "Audio",
+    "projectors": "Projectors",
+    "multiroom": "Multiroom",
+    "homeTheater": "Home Theater",
+    "radio": "Radio",
+    "soundbarsSubwoofers": "Soundbars & Subwoofers",
+    "bluetoothSpeakers": "Bluetooth Speakers",
+    "amplifiers": "Amplifiers"
+  },
+  "home": {
+    "heroTitle": "The art of sound",
+    "heroSubtitle": "Discover our curated collection of premium audio and visual technology",
+    "brandsTitle": "Our brands",
+    "brandsSubtitle": "Three of the world's most prestigious brands",
+    "boDescription": "Iconic Danish design uniting extraordinary sound with exquisite craftsmanship",
+    "devialetDescription": "Revolutionary French sound engineering",
+    "loeweDescription": "Premium German technology for your home",
+    "discoverCollection": "Discover the collection",
+    "exploreMore": "Explore more"
+  },
+  "brand": {
+    "boTagline": "Danish design. Extraordinary sound.",
+    "devialetTagline": "Sound engineering. Reinvented.",
+    "loeweTagline": "Premium technology. German craftsmanship.",
+    "viewProducts": "View products",
+    "featuredProducts": "Featured products"
+  },
+  "product": {
+    "techSpecs": "Technical specifications",
+    "selectColor": "Select color",
+    "contactForPrice": "Contact us for pricing",
+    "relatedProducts": "Related products"
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "We're here to help you find the perfect product",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send",
+    "address": "Address",
+    "workingHours": "Working hours"
+  },
+  "about": {
+    "title": "About Bold",
+    "subtitle": "Your trusted partner for premium audio and visual technology in Kosovo",
+    "story": "Our story",
+    "mission": "Our mission"
+  }
+}
