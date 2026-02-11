@@ -66,11 +66,33 @@ export default function MediaPage() {
   }
 
   async function handleDelete(item: Media) {
-    if (!confirm(`Delete "${item.filename}"?`)) return;
+    if (!confirm(`Delete "${item.filename}"? This will permanently remove the file.`)) return;
     const supabase = createAdminClient();
+
+    // Delete from storage — extract bucket and path from URL
+    // URL format: https://HOST/storage/v1/object/public/BUCKET/PATH
+    try {
+      const urlObj = new URL(item.url);
+      const parts = urlObj.pathname.replace('/storage/v1/object/public/', '').split('/');
+      const bucket = parts[0];
+      const storagePath = parts.slice(1).join('/');
+      if (bucket && storagePath) {
+        await supabase.storage.from(bucket).remove([storagePath]);
+      }
+    } catch {
+      // If URL parsing fails, still delete the DB record
+    }
+
+    // Delete from site_content where this media is referenced
+    await supabase.from('site_content').update({ media_url: null, media_type: null }).eq('media_url', item.url);
+
+    // Delete from product_images where this media is referenced
+    await supabase.from('product_images').delete().eq('url', item.url);
+
+    // Delete from media table
     await supabase.from('media').delete().eq('id', item.id);
     setMedia((prev) => prev.filter((m) => m.id !== item.id));
-    toast.success('Deleted');
+    toast.success('Deleted from library and storage');
   }
 
   function handleDrop(e: React.DragEvent) {

@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { createAdminClient } from '@/lib/supabase/admin-client';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import type { Media } from '@/lib/supabase/types';
 import toast from 'react-hot-toast';
 
 interface ContentBlock {
@@ -172,6 +174,8 @@ export default function ContentPage() {
   const [uploading, setUploading] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploadTargetKey, setUploadTargetKey] = useState<string | null>(null);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<string | null>(null);
 
   useEffect(() => {
     loadContent();
@@ -286,6 +290,15 @@ export default function ContentPage() {
     setFieldValue(page, section, key, 'media_url', publicUrl);
     setFieldValue(page, section, key, 'media_type', mediaType);
 
+    // Also add to media library so it shows in the Media tab
+    await supabase.from('media').insert({
+      url: publicUrl,
+      filename: file.name,
+      mime_type: file.type,
+      size: file.size,
+      alt_text: file.name.replace(/\.[^.]+$/, ''),
+    });
+
     toast.success(`${mediaType === 'video' ? 'Video' : 'Image'} uploaded!`);
     setUploading(null);
     setUploadTargetKey(null);
@@ -295,6 +308,21 @@ export default function ContentPage() {
   function triggerUpload(page: string, section: string, key: string) {
     setUploadTargetKey(`${page}|${section}|${key}`);
     setTimeout(() => fileRef.current?.click(), 50);
+  }
+
+  function openMediaPicker(page: string, section: string, key: string) {
+    setMediaPickerTarget(`${page}|${section}|${key}`);
+    setShowMediaPicker(true);
+  }
+
+  function handleMediaPickerSelect(media: Media) {
+    if (!mediaPickerTarget) return;
+    const [page, section, key] = mediaPickerTarget.split('|');
+    const mediaType = media.mime_type.startsWith('video/') ? 'video' : 'image';
+    setFieldValue(page, section, key, 'media_url', media.url);
+    setFieldValue(page, section, key, 'media_type', mediaType);
+    toast.success('Media selected from library');
+    setMediaPickerTarget(null);
   }
 
   const pageConfig = PAGE_SECTIONS[activePage];
@@ -371,7 +399,13 @@ export default function ContentPage() {
                             onClick={() => triggerUpload(activePage, section.id, fieldKey)}
                             className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
                           >
-                            Replace
+                            Upload New
+                          </button>
+                          <button
+                            onClick={() => openMediaPicker(activePage, section.id, fieldKey)}
+                            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50"
+                          >
+                            From Library
                           </button>
                           <button
                             onClick={() => {
@@ -386,17 +420,30 @@ export default function ContentPage() {
                         <p className="text-xs text-gray-400 break-all">{mediaUrl}</p>
                       </div>
                     ) : (
-                      <div
-                        onClick={() => !isUploadingThis && triggerUpload(activePage, section.id, fieldKey)}
-                        className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-colors max-w-lg"
-                      >
+                      <div className="max-w-lg">
                         {isUploadingThis ? (
-                          <p className="text-sm text-gray-500">Uploading…</p>
+                          <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+                            <p className="text-sm text-gray-500">Uploading…</p>
+                          </div>
                         ) : (
-                          <>
-                            <p className="text-sm text-gray-500">Click to upload an image or video</p>
-                            <p className="text-xs text-gray-400 mt-1">Images up to 100MB, videos up to 500MB</p>
-                          </>
+                          <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center space-y-3">
+                            <p className="text-sm text-gray-500">Add an image or video</p>
+                            <div className="flex gap-3 justify-center">
+                              <button
+                                onClick={() => triggerUpload(activePage, section.id, fieldKey)}
+                                className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                              >
+                                Upload File
+                              </button>
+                              <button
+                                onClick={() => openMediaPicker(activePage, section.id, fieldKey)}
+                                className="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                              >
+                                From Library
+                              </button>
+                            </div>
+                            <p className="text-xs text-gray-400">Images up to 100MB, videos up to 500MB</p>
+                          </div>
                         )}
                       </div>
                     )}
@@ -451,6 +498,13 @@ export default function ContentPage() {
         accept="image/*,video/*"
         onChange={handleMediaUpload}
         className="hidden"
+      />
+
+      {/* Media picker modal */}
+      <MediaPickerModal
+        open={showMediaPicker}
+        onClose={() => { setShowMediaPicker(false); setMediaPickerTarget(null); }}
+        onSelect={handleMediaPickerSelect}
       />
     </div>
   );
