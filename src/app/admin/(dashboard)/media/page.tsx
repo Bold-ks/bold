@@ -10,10 +10,12 @@ export default function MediaPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [usedUrls, setUsedUrls] = useState<Set<string>>(new Set());
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadMedia();
+    loadUsedUrls();
   }, []);
 
   async function loadMedia() {
@@ -24,6 +26,46 @@ export default function MediaPage() {
       .order('uploaded_at', { ascending: false });
     setMedia(data || []);
     setLoading(false);
+  }
+
+  async function loadUsedUrls() {
+    const supabase = createAdminClient();
+    const urls = new Set<string>();
+
+    // Check site_content media_url
+    const { data: contentData } = await supabase
+      .from('site_content')
+      .select('media_url')
+      .not('media_url', 'is', null)
+      .neq('media_url', '');
+    if (contentData) {
+      for (const row of contentData as { media_url: string | null }[]) {
+        if (row.media_url) urls.add(row.media_url);
+      }
+    }
+
+    // Check product_images url
+    const { data: imgData } = await supabase
+      .from('product_images')
+      .select('url');
+    if (imgData) {
+      for (const row of imgData as { url: string }[]) {
+        if (row.url) urls.add(row.url);
+      }
+    }
+
+    // Check product_variants image_url
+    const { data: varData } = await supabase
+      .from('product_variants')
+      .select('image_url')
+      .not('image_url', 'is', null);
+    if (varData) {
+      for (const row of varData as { image_url: string | null }[]) {
+        if (row.image_url) urls.add(row.image_url);
+      }
+    }
+
+    setUsedUrls(urls);
   }
 
   async function handleUpload(files: FileList | File[]) {
@@ -92,6 +134,7 @@ export default function MediaPage() {
     // Delete from media table
     await supabase.from('media').delete().eq('id', item.id);
     setMedia((prev) => prev.filter((m) => m.id !== item.id));
+    loadUsedUrls();
     toast.success('Deleted from library and storage');
   }
 
@@ -176,7 +219,14 @@ export default function MediaPage() {
               )}
               <div className="p-2">
                 <p className="text-xs text-gray-600 truncate">{item.filename}</p>
-                <p className="text-[10px] text-gray-400">{formatSize(item.size)}</p>
+                <div className="flex items-center justify-between mt-0.5">
+                  <p className="text-[10px] text-gray-400">{formatSize(item.size)}</p>
+                  {usedUrls.has(item.url) ? (
+                    <span className="text-[9px] font-semibold text-green-700 bg-green-100 px-1.5 py-0.5 rounded">USED</span>
+                  ) : (
+                    <span className="text-[9px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">NOT USED</span>
+                  )}
+                </div>
               </div>
               <button
                 onClick={() => handleDelete(item)}
