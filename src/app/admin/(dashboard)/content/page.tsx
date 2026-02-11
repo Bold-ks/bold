@@ -36,6 +36,9 @@ const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; lab
         fields: [
           { key: 'brands-title', label: 'Title', type: 'text', placeholder: 'e.g. Our Brands' },
           { key: 'brands-subtitle', label: 'Subtitle', type: 'text', placeholder: 'e.g. Curated for excellence' },
+          { key: 'brands-bo-image', label: 'Bang & Olufsen — Card Image', type: 'media' },
+          { key: 'brands-devialet-image', label: 'Devialet — Card Image', type: 'media' },
+          { key: 'brands-loewe-image', label: 'Loewe — Card Image', type: 'media' },
         ],
       },
       {
