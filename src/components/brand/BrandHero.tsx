@@ -50,7 +50,7 @@ export function BrandHero({ brand }: { brand: BrandInfo }) {
   const isDark = hasMedia;
 
   return (
-    <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
       {hasMedia ? (
         isVideo ? (
           <video
