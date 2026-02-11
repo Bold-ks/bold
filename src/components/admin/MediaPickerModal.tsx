@@ -77,15 +77,30 @@ export function MediaPickerModal({ open, onClose, onSelect }: Props) {
                     onSelect(item);
                     onClose();
                   }}
-                  className="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-black transition-colors focus:border-black focus:outline-none"
+                  className="rounded-lg overflow-hidden border-2 border-transparent hover:border-black transition-colors focus:border-black focus:outline-none flex flex-col"
                 >
                   {item.mime_type.startsWith('video/') ? (
-                    <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-                      <span className="text-2xl">🎬</span>
+                    <div className="aspect-square relative bg-gray-900">
+                      <video
+                        src={item.url}
+                        muted
+                        preload="metadata"
+                        className="w-full h-full object-cover"
+                        onMouseEnter={(e) => { const v = e.currentTarget; v.currentTime = 0; v.play().catch(() => {}); }}
+                        onMouseLeave={(e) => { e.currentTarget.pause(); }}
+                      />
+                      <div className="absolute top-1 right-1 bg-black/70 text-white text-[9px] px-1.5 py-0.5 rounded font-medium">
+                        VIDEO
+                      </div>
                     </div>
                   ) : (
-                    <img src={item.url} alt={item.alt_text || ''} className="w-full h-full object-cover" />
+                    <div className="aspect-square">
+                      <img src={item.url} alt={item.alt_text || ''} className="w-full h-full object-cover" />
+                    </div>
                   )}
+                  <div className="px-1.5 py-1 bg-white">
+                    <p className="text-[10px] text-gray-500 truncate">{item.filename}</p>
+                  </div>
                 </button>
               ))}
             </div>

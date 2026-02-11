@@ -158,8 +158,18 @@ export default function MediaPage() {
           {media.map((item) => (
             <div key={item.id} className="group relative rounded-xl overflow-hidden border border-gray-200 bg-white">
               {item.mime_type.startsWith('video/') ? (
-                <div className="aspect-square bg-gray-900 flex items-center justify-center">
-                  <span className="text-3xl">🎬</span>
+                <div className="aspect-square relative bg-gray-900">
+                  <video
+                    src={item.url}
+                    muted
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                    onMouseEnter={(e) => { const v = e.currentTarget; v.currentTime = 0; v.play().catch(() => {}); }}
+                    onMouseLeave={(e) => { e.currentTarget.pause(); }}
+                  />
+                  <div className="absolute top-1.5 left-1.5 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded font-medium pointer-events-none">
+                    VIDEO
+                  </div>
                 </div>
               ) : (
                 <img src={item.url} alt={item.alt_text || ''} className="aspect-square object-cover w-full" />
