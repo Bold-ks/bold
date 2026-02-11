@@ -7,11 +7,11 @@ import { createAdminClient } from '@/lib/supabase/admin-client';
 import { Toaster } from 'react-hot-toast';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/products', label: 'Products', icon: '📦' },
-  { href: '/admin/media', label: 'Media', icon: '🖼️' },
-  { href: '/admin/content', label: 'Content', icon: '📝' },
-  { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/products', label: 'Products' },
+  { href: '/admin/media', label: 'Media' },
+  { href: '/admin/content', label: 'Content' },
+  { href: '/admin/settings', label: 'Settings' },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -70,7 +70,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-black'
                   }`}
                 >
-                  <span className="text-base">{item.icon}</span>
                   {item.label}
                 </Link>
               );
@@ -85,7 +84,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors"
             >
-              <span className="text-base">🚪</span>
               Sign Out
             </button>
           </div>
