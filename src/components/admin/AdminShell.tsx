@@ -7,11 +7,11 @@ import { createAdminClient } from '@/lib/supabase/admin-client';
 import { Toaster } from 'react-hot-toast';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/products', label: 'Products' },
-  { href: '/admin/media', label: 'Media' },
-  { href: '/admin/content', label: 'Content' },
-  { href: '/admin/settings', label: 'Settings' },
+  { href: '/admin', label: 'Dashboard', icon: '📊' },
+  { href: '/admin/products', label: 'Products', icon: '📦' },
+  { href: '/admin/media', label: 'Media', icon: '🖼️' },
+  { href: '/admin/content', label: 'Content', icon: '✏️' },
+  { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -51,7 +51,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <div className="h-full flex flex-col">
           <div className="px-5 py-5 border-b border-gray-100">
             <Link href="/admin" className="text-lg font-bold tracking-tight">BOLD</Link>
-            <p className="text-xs text-gray-400 mt-0.5">Admin</p>
+            <p className="text-xs text-gray-400 mt-0.5">Admin Panel</p>
           </div>
 
           <nav className="flex-1 px-3 py-4 space-y-0.5">
@@ -70,20 +70,31 @@ export function AdminShell({ children }: { children: ReactNode }) {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-black'
                   }`}
                 >
+                  <span className="text-base">{item.icon}</span>
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="px-3 py-4 border-t border-gray-100">
-            <div className="px-3 mb-2">
+          <div className="px-3 py-4 border-t border-gray-100 space-y-2">
+            <a
+              href="/sq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-50 hover:text-black transition-colors"
+            >
+              <span className="text-base">🌐</span>
+              View Site
+            </a>
+            <div className="px-3 pt-2 border-t border-gray-100">
               <p className="text-xs text-gray-400 truncate">{userEmail}</p>
             </div>
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-black transition-colors"
             >
+              <span className="text-base">🚪</span>
               Sign Out
             </button>
           </div>

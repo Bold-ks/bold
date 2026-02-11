@@ -329,12 +329,12 @@ export default function ProductEditPage() {
         </div>
         {!isNew && slug && (
           <a
-            href={`/en/${brand}/${slug}`}
+            href={`/sq/${brand}/${slug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            View on site ↗
+            🌐 View on site ↗
           </a>
         )}
       </div>
