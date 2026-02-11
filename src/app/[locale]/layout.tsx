@@ -7,6 +7,7 @@ import { Outfit } from 'next/font/google';
 import '../globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { CookieConsent } from '@/components/ui/CookieConsent';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -40,6 +41,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
+          <CookieConsent />
         </NextIntlClientProvider>
       </body>
     </html>

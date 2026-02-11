@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { Product } from '@/data/types';
 import { PlaceholderImage } from './PlaceholderImage';
+import Image from 'next/image';
 
 export function ProductCard({ product }: { product: Product }) {
   const t = useTranslations('common');
@@ -17,12 +18,15 @@ export function ProductCard({ product }: { product: Product }) {
         transition={{ duration: 0.3 }}
         className="group cursor-pointer"
       >
-        <div className="aspect-square mb-4 overflow-hidden">
+        <div className="relative aspect-square mb-4 overflow-hidden bg-warm-50">
           {product.heroImage ? (
-            <img
+            <Image
               src={product.heroImage}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              loading="lazy"
             />
           ) : (
             <PlaceholderImage
@@ -32,7 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </div>
         <h3 className="text-sm font-medium tracking-wide">{product.name}</h3>
-        <p className="text-xs text-warm-500 mt-1">
+        <p className="text-xs text-warm-500 mt-1 line-clamp-2">
           {product.description[locale as 'sq' | 'en']}
         </p>
         <p className="text-sm mt-2 font-medium">

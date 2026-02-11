@@ -69,6 +69,43 @@ export function getAllProducts(): StaticProduct[] {
   return staticProducts;
 }
 
+export async function getProductImagesAndSpecs(slug: string): Promise<{
+  images: { url: string; alt_text?: string | null; is_hero?: boolean }[];
+  specs: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
+}> {
+  if (isSupabaseConfigured) {
+    try {
+      const { getProductBySlug: sbGetBySlug } = await import('@/lib/supabase/queries');
+      const product = await sbGetBySlug(slug);
+      if (product) {
+        const images = (product.product_images || [])
+          .sort((a: { sort_order: number; is_hero: boolean }, b: { sort_order: number; is_hero: boolean }) => {
+            if (a.is_hero && !b.is_hero) return -1;
+            if (!a.is_hero && b.is_hero) return 1;
+            return a.sort_order - b.sort_order;
+          })
+          .map((img: { url: string; alt_text?: string | null; is_hero: boolean }) => ({
+            url: img.url,
+            alt_text: img.alt_text,
+            is_hero: img.is_hero,
+          }));
+        const specs = (product.product_specs || [])
+          .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
+          .map((s: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }) => ({
+            spec_key_sq: s.spec_key_sq,
+            spec_key_en: s.spec_key_en,
+            spec_value_sq: s.spec_value_sq,
+            spec_value_en: s.spec_value_en,
+          }));
+        return { images, specs };
+      }
+    } catch (e) {
+      console.error('Failed to get images/specs from Supabase:', e);
+    }
+  }
+  return { images: [], specs: [] };
+}
+
 // Map Supabase product to static product shape for backwards compatibility
 function mapSupabaseProduct(p: {
   slug: string;

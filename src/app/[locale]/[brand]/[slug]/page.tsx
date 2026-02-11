@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getBrand } from '@/lib/data';
+import { getProductImagesAndSpecs } from '@/lib/data';
 import { ProductDetail } from '@/components/product/ProductDetail';
 
 export const revalidate = 60;
@@ -17,5 +18,7 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product || product.brand !== brandSlug) notFound();
 
-  return <ProductDetail product={product} />;
+  const { images, specs } = await getProductImagesAndSpecs(slug);
+
+  return <ProductDetail product={product} allImages={images} specs={specs} />;
 }

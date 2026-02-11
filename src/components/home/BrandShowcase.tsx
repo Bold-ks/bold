@@ -7,6 +7,7 @@ import { BrandInfo } from '@/data/types';
 import { PlaceholderImage } from '@/components/ui/PlaceholderImage';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 const brandImageKeys: Record<string, string> = {
   'bang-olufsen': 'brands-bo-image',
@@ -47,11 +48,14 @@ export function BrandShowcase({ brand }: { brand: BrandInfo }) {
         className="group cursor-pointer"
       >
         {imageUrl ? (
-          <div className="aspect-[4/5] mb-6 overflow-hidden rounded-sm bg-warm-100">
-            <img
+          <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-sm bg-warm-100">
+            <Image
               src={imageUrl}
               alt={brand.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              loading="lazy"
             />
           </div>
         ) : (

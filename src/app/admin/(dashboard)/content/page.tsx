@@ -130,6 +130,31 @@ const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; lab
       },
     ],
   },
+  footer: {
+    label: 'Footer',
+    sections: [
+      {
+        id: 'footer',
+        label: '🦶 Footer Content',
+        fields: [
+          { key: 'footer-description', label: 'Description', type: 'text', placeholder: 'Premium audio & visual technology in Kosovo' },
+          { key: 'footer-address', label: 'Address', type: 'text', placeholder: 'Prishtina, Kosovo' },
+          { key: 'footer-email', label: 'Email', type: 'text', placeholder: 'info@bold-ks.com' },
+          { key: 'footer-phone', label: 'Phone', type: 'text', placeholder: '+383 ...' },
+        ],
+      },
+      {
+        id: 'social',
+        label: '🔗 Social Media Links',
+        fields: [
+          { key: 'social-instagram', label: 'Instagram URL', type: 'text', placeholder: 'https://instagram.com/boldkosova' },
+          { key: 'social-facebook', label: 'Facebook URL', type: 'text', placeholder: 'https://facebook.com/boldkosova' },
+          { key: 'social-tiktok', label: 'TikTok URL', type: 'text', placeholder: 'https://tiktok.com/@boldkosova' },
+          { key: 'social-youtube', label: 'YouTube URL', type: 'text', placeholder: 'https://youtube.com/@boldkosova' },
+        ],
+      },
+    ],
+  },
 };
 
 interface FieldDef {

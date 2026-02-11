@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 interface HeroContent {
   title?: string;
@@ -58,10 +59,10 @@ export function HeroSection() {
   const cta = hero.cta || t('exploreMore');
   const hasMedia = !!hero.mediaUrl;
   const isVideo = hero.mediaType === 'video';
-  const isDark = hasMedia; // Use white text when there's a background media
+  const isDark = hasMedia;
 
   return (
-    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[80vh] md:h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background */}
       {hasMedia ? (
         isVideo ? (
@@ -74,10 +75,13 @@ export function HeroSection() {
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <img
-            src={hero.mediaUrl}
+          <Image
+            src={hero.mediaUrl!}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
           />
         )
       ) : (
@@ -88,12 +92,12 @@ export function HeroSection() {
       {hasMedia && <div className="absolute inset-0 bg-black/30" />}
 
       {/* Content */}
-      <div className={`relative z-10 text-center px-6 ${!loaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500`}>
+      <div className={`relative z-10 text-center px-4 md:px-6 ${!loaded ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500`}>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
-          className={`text-5xl md:text-8xl font-light tracking-tight mb-6 ${isDark ? 'text-white' : 'text-black'}`}
+          className={`text-3xl md:text-8xl font-light tracking-tight mb-4 md:mb-6 ${isDark ? 'text-white' : 'text-black'}`}
         >
           {title}
         </motion.h1>
@@ -101,7 +105,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-          className={`text-lg md:text-xl max-w-lg mx-auto mb-10 ${isDark ? 'text-white/80' : 'text-warm-600'}`}
+          className={`text-base md:text-xl max-w-lg mx-auto mb-8 md:mb-10 ${isDark ? 'text-white/80' : 'text-warm-600'}`}
         >
           {subtitle}
         </motion.p>
@@ -112,7 +116,7 @@ export function HeroSection() {
         >
           <Link
             href="/bang-olufsen"
-            className={`inline-block px-10 py-3 text-sm tracking-widest uppercase transition-colors ${
+            className={`inline-block px-8 md:px-10 py-3 text-xs md:text-sm tracking-widest uppercase transition-colors ${
               isDark
                 ? 'bg-white text-black hover:bg-white/90'
                 : 'bg-black text-white hover:bg-warm-800'
