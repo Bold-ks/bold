@@ -46,6 +46,7 @@ export interface Database {
         Row: {
           id: string;
           product_id: string;
+          variant_id: string | null;
           url: string;
           alt_text: string | null;
           is_hero: boolean;

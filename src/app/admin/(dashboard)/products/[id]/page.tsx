@@ -134,22 +134,41 @@ export default function ProductEditPage() {
         if (error) throw error;
       }
 
-      // Save variants
+      // Save variants — upsert existing, insert new, delete removed
       if (!isNew) {
-        await supabase.from('product_variants').delete().eq('product_id', productId);
+        const existingIds = variants.filter((v) => v.id).map((v) => v.id!);
+        // Delete variants that were removed (but first unlink their images)
+        if (existingIds.length > 0) {
+          await supabase.from('product_images').update({ variant_id: null }).eq('product_id', productId).not('variant_id', 'in', `(${existingIds.join(',')})`);
+          await supabase.from('product_variants').delete().eq('product_id', productId).not('id', 'in', `(${existingIds.join(',')})`);
+        } else {
+          await supabase.from('product_images').update({ variant_id: null }).eq('product_id', productId);
+          await supabase.from('product_variants').delete().eq('product_id', productId);
+        }
       }
-      if (variants.length > 0) {
-        const { error } = await supabase.from('product_variants').insert(
-          variants.map((v, i) => ({
-            product_id: productId,
-            color_name: v.color_name || '',
-            color_hex: v.color_hex || null,
-            price: v.price || null,
-            image_url: v.image_url || null,
-            sort_order: i,
-          }))
-        );
-        if (error) throw error;
+      const newVariantIds: string[] = [];
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        const variantData = {
+          product_id: productId,
+          color_name: v.color_name || '',
+          color_hex: v.color_hex || null,
+          price: v.price || null,
+          image_url: v.image_url || null,
+          sort_order: i,
+        };
+        if (v.id) {
+          await supabase.from('product_variants').update(variantData).eq('id', v.id);
+          newVariantIds.push(v.id);
+        } else {
+          const { data: newV, error } = await supabase.from('product_variants').insert(variantData).select('id').single();
+          if (error) throw error;
+          newVariantIds.push(newV.id);
+          // Update local state with new ID
+          const updated = [...variants];
+          updated[i] = { ...updated[i], id: newV.id };
+          setVariants(updated);
+        }
       }
 
       // Save specs
@@ -304,6 +323,63 @@ export default function ProductEditPage() {
       });
   }
 
+  async function handleVariantImageUpload(e: React.ChangeEvent<HTMLInputElement>, variantId: string) {
+    const files = e.target.files;
+    if (!files?.length) return;
+    if (isNew) {
+      toast.error('Save the product first');
+      return;
+    }
+
+    const supabase = createAdminClient();
+    for (const file of Array.from(files)) {
+      if (file.size > 100 * 1024 * 1024) {
+        toast.error(`${file.name} is too large (max 100MB)`);
+        continue;
+      }
+
+      const ext = file.name.split('.').pop();
+      const path = `${id}/variants/${variantId}/${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
+      if (uploadError) {
+        toast.error(`Failed to upload ${file.name}`);
+        continue;
+      }
+
+      const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
+
+      const { data: imgData, error: imgError } = await supabase
+        .from('product_images')
+        .insert({
+          product_id: id,
+          variant_id: variantId,
+          url: publicUrl,
+          alt_text: name,
+          is_hero: false,
+          sort_order: images.filter((img) => img.variant_id === variantId).length,
+        })
+        .select()
+        .single();
+
+      if (imgError) {
+        toast.error('Failed to save image record');
+        continue;
+      }
+
+      setImages((prev) => [...prev, imgData]);
+
+      await supabase.from('media').insert({
+        url: publicUrl,
+        filename: file.name,
+        mime_type: file.type,
+        size: file.size,
+        alt_text: `${name} - variant`,
+      });
+    }
+    toast.success('Variant images uploaded');
+    e.target.value = '';
+  }
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -406,59 +482,109 @@ export default function ProductEditPage() {
 
         {variants.length === 0 && <p className="text-sm text-gray-400">No color variants yet</p>}
 
-        {variants.map((v, i) => (
-          <div key={i} className="flex items-center gap-3 flex-wrap">
-            <input
-              value={v.color_name || ''}
-              onChange={(e) => {
-                const updated = [...variants];
-                updated[i] = { ...updated[i], color_name: e.target.value };
-                setVariants(updated);
-              }}
-              placeholder="Color name"
-              className="input-field flex-1 min-w-[150px]"
-            />
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={v.color_hex || '#000000'}
-                onChange={(e) => {
-                  const updated = [...variants];
-                  updated[i] = { ...updated[i], color_hex: e.target.value };
-                  setVariants(updated);
-                }}
-                className="w-8 h-8 rounded border border-gray-200 cursor-pointer"
-              />
-              <input
-                value={v.color_hex || ''}
-                onChange={(e) => {
-                  const updated = [...variants];
-                  updated[i] = { ...updated[i], color_hex: e.target.value };
-                  setVariants(updated);
-                }}
-                placeholder="#hex"
-                className="input-field w-24"
-              />
+        {variants.map((v, i) => {
+          const variantId = v.id;
+          const variantImages = images.filter((img) => img.variant_id === variantId);
+          return (
+            <div key={v.id || `new-${i}`} className="border border-gray-100 rounded-lg p-4 space-y-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <input
+                  value={v.color_name || ''}
+                  onChange={(e) => {
+                    const updated = [...variants];
+                    updated[i] = { ...updated[i], color_name: e.target.value };
+                    setVariants(updated);
+                  }}
+                  placeholder="Color name"
+                  className="input-field flex-1 min-w-[150px]"
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={v.color_hex || '#000000'}
+                    onChange={(e) => {
+                      const updated = [...variants];
+                      updated[i] = { ...updated[i], color_hex: e.target.value };
+                      setVariants(updated);
+                    }}
+                    className="w-8 h-8 rounded border border-gray-200 cursor-pointer"
+                  />
+                  <input
+                    value={v.color_hex || ''}
+                    onChange={(e) => {
+                      const updated = [...variants];
+                      updated[i] = { ...updated[i], color_hex: e.target.value };
+                      setVariants(updated);
+                    }}
+                    placeholder="#hex"
+                    className="input-field w-24"
+                  />
+                </div>
+                <input
+                  value={v.price?.toString() || ''}
+                  onChange={(e) => {
+                    const updated = [...variants];
+                    updated[i] = { ...updated[i], price: e.target.value ? parseFloat(e.target.value) : null };
+                    setVariants(updated);
+                  }}
+                  placeholder="Price override"
+                  type="number"
+                  className="input-field w-32"
+                />
+                <button
+                  onClick={() => {
+                    setVariants(variants.filter((_, j) => j !== i));
+                    // Remove associated images
+                    if (variantId) {
+                      setImages((prev) => prev.filter((img) => img.variant_id !== variantId));
+                    }
+                  }}
+                  className="text-red-400 hover:text-red-600 text-sm"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Per-variant images */}
+              {variantId ? (
+                <div className="pl-2 border-l-2 border-gray-100 ml-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-400">Images for {v.color_name || 'this color'}</span>
+                    <label className="text-xs text-black hover:underline cursor-pointer">
+                      + Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => handleVariantImageUpload(e, variantId)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                  {variantImages.length > 0 ? (
+                    <div className="flex gap-2 flex-wrap">
+                      {variantImages.map((img, j) => (
+                        <div key={img.id || j} className="relative group w-16 h-16 rounded overflow-hidden border border-gray-200">
+                          <img src={img.url} alt="" className="w-full h-full object-cover" />
+                          <button
+                            onClick={() => handleDeleteImage(img)}
+                            className="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all text-white text-xs"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-300">No images yet — upload or save variant first</p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-gray-300 pl-2">Save the product first to upload images for this color</p>
+              )}
             </div>
-            <input
-              value={v.price?.toString() || ''}
-              onChange={(e) => {
-                const updated = [...variants];
-                updated[i] = { ...updated[i], price: e.target.value ? parseFloat(e.target.value) : null };
-                setVariants(updated);
-              }}
-              placeholder="Price override"
-              type="number"
-              className="input-field w-32"
-            />
-            <button
-              onClick={() => setVariants(variants.filter((_, j) => j !== i))}
-              className="text-red-400 hover:text-red-600 text-sm"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       {/* Images */}

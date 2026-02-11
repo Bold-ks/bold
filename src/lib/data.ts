@@ -70,8 +70,9 @@ export function getAllProducts(): StaticProduct[] {
 }
 
 export async function getProductImagesAndSpecs(slug: string): Promise<{
-  images: { url: string; alt_text?: string | null; is_hero?: boolean }[];
+  images: { url: string; alt_text?: string | null; is_hero?: boolean; variant_id?: string | null }[];
   specs: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
+  variants: { id: string; color_name: string; color_hex: string | null; price: number | null }[];
 }> {
   if (isSupabaseConfigured) {
     try {
@@ -84,10 +85,11 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
             if (!a.is_hero && b.is_hero) return 1;
             return a.sort_order - b.sort_order;
           })
-          .map((img: { url: string; alt_text?: string | null; is_hero: boolean }) => ({
+          .map((img: { url: string; alt_text?: string | null; is_hero: boolean; variant_id?: string | null }) => ({
             url: img.url,
             alt_text: img.alt_text,
             is_hero: img.is_hero,
+            variant_id: img.variant_id || null,
           }));
         const specs = (product.product_specs || [])
           .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
@@ -97,13 +99,21 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
             spec_value_sq: s.spec_value_sq,
             spec_value_en: s.spec_value_en,
           }));
-        return { images, specs };
+        const variants = (product.product_variants || [])
+          .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
+          .map((v: { id: string; color_name: string; color_hex: string | null; price: number | null }) => ({
+            id: v.id,
+            color_name: v.color_name,
+            color_hex: v.color_hex,
+            price: v.price,
+          }));
+        return { images, specs, variants };
       }
     } catch (e) {
       console.error('Failed to get images/specs from Supabase:', e);
     }
   }
-  return { images: [], specs: [] };
+  return { images: [], specs: [], variants: [] };
 }
 
 // Map Supabase product to static product shape for backwards compatibility

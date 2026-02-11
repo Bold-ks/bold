@@ -11,25 +11,42 @@ import Image from 'next/image';
 
 interface ProductDetailProps {
   product: Product;
-  allImages?: { url: string; alt_text?: string | null; is_hero?: boolean }[];
+  allImages?: { url: string; alt_text?: string | null; is_hero?: boolean; variant_id?: string | null }[];
   specs?: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
+  variants?: { id: string; color_name: string; color_hex: string | null; price: number | null }[];
 }
 
-export function ProductDetail({ product, allImages, specs }: ProductDetailProps) {
+export function ProductDetail({ product, allImages, specs, variants: dbVariants }: ProductDetailProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  // Build images list
-  const images = allImages && allImages.length > 0
-    ? allImages.map((img) => img.url)
+  // Use DB variants if available, otherwise fall back to product.colors
+  const colorVariants = dbVariants && dbVariants.length > 0 ? dbVariants : null;
+  const selectedVariantId = colorVariants ? colorVariants[selectedColorIndex]?.id : null;
+
+  // Build images list — filter by selected variant if variant has images
+  const allImgs = allImages && allImages.length > 0 ? allImages : [];
+  const variantImages = selectedVariantId
+    ? allImgs.filter((img) => img.variant_id === selectedVariantId)
+    : [];
+  const generalImages = allImgs.filter((img) => !img.variant_id);
+  // Show variant-specific images if they exist, otherwise show general images
+  const displayImages = variantImages.length > 0 ? variantImages : generalImages;
+  const images = displayImages.length > 0
+    ? displayImages.map((img) => img.url)
     : product.heroImage
     ? [product.heroImage]
     : [];
 
   const currentImage = images[selectedImageIndex] || null;
+
+  // Reset image index when switching colors
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [selectedColorIndex]);
 
   // Build specs list (bilingual from props, fallback to product.specs)
   const specsList = specs && specs.length > 0
@@ -137,25 +154,37 @@ export function ProductDetail({ product, allImages, specs }: ProductDetailProps)
 
                   {/* Price */}
                   <div className="mb-6 md:mb-8">
-                    {product.price ? (
-                      <p className="text-2xl md:text-3xl font-light">
-                        €{product.price.toLocaleString()}
-                      </p>
-                    ) : (
-                      <p className="text-base md:text-lg text-warm-500">
-                        {t('product.contactForPrice')}
-                      </p>
-                    )}
+                    {(() => {
+                      const variantPrice = colorVariants?.[selectedColorIndex]?.price;
+                      const displayPrice = variantPrice || product.price;
+                      return displayPrice ? (
+                        <p className="text-2xl md:text-3xl font-light">
+                          €{displayPrice.toLocaleString()}
+                        </p>
+                      ) : (
+                        <p className="text-base md:text-lg text-warm-500">
+                          {t('product.contactForPrice')}
+                        </p>
+                      );
+                    })()}
                   </div>
 
                   {/* Colors */}
-                  {product.colors.length > 0 && (
+                  {(colorVariants ? colorVariants.length > 0 : product.colors.length > 0) && (
                     <div className="mb-6 md:mb-8">
                       <h3 className="text-xs tracking-widest uppercase text-warm-400 mb-3">
                         {t('product.selectColor')}
+                        {colorVariants && colorVariants[selectedColorIndex]?.color_name && (
+                          <span className="ml-2 normal-case tracking-normal text-warm-600 font-medium">
+                            — {colorVariants[selectedColorIndex].color_name}
+                          </span>
+                        )}
                       </h3>
                       <ColorPicker
-                        colors={product.colors}
+                        colors={colorVariants
+                          ? colorVariants.map((v) => ({ name: v.color_name, hex: v.color_hex || '#000000' }))
+                          : product.colors
+                        }
                         selectedIndex={selectedColorIndex}
                         onSelect={setSelectedColorIndex}
                       />
