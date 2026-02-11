@@ -20,6 +20,7 @@ export interface Product {
   colors: ProductColor[];
   specs: Record<string, string>;
   featured?: boolean;
+  heroImage?: string;
 }
 
 export interface BrandInfo {
