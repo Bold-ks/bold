@@ -32,7 +32,7 @@ export default function MediaPage() {
     let count = 0;
 
     for (const file of Array.from(files)) {
-      const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+      const maxSize = file.type.startsWith('video/') ? 500 * 1024 * 1024 : 100 * 1024 * 1024;
       if (file.size > maxSize) {
         toast.error(`${file.name} too large`);
         continue;
@@ -119,7 +119,7 @@ export default function MediaPage() {
         <p className="text-sm text-gray-400">
           {uploading ? 'Uploading…' : 'Drag & drop files here, or click to browse'}
         </p>
-        <p className="text-xs text-gray-300 mt-1">Images up to 10MB, videos up to 50MB</p>
+        <p className="text-xs text-gray-300 mt-1">Images up to 100MB, videos up to 500MB</p>
       </div>
 
       {/* Media grid */}

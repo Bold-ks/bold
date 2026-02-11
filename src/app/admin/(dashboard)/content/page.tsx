@@ -229,7 +229,7 @@ export default function ContentPage() {
     const file = e.target.files?.[0];
     if (!file || !uploadTargetKey) return;
 
-    const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+    const maxSize = file.type.startsWith('video/') ? 500 * 1024 * 1024 : 100 * 1024 * 1024;
     if (file.size > maxSize) {
       toast.error('File too large');
       return;
@@ -364,7 +364,7 @@ export default function ContentPage() {
                         ) : (
                           <>
                             <p className="text-sm text-gray-500">Click to upload an image or video</p>
-                            <p className="text-xs text-gray-400 mt-1">Images up to 10MB, videos up to 50MB</p>
+                            <p className="text-xs text-gray-400 mt-1">Images up to 100MB, videos up to 500MB</p>
                           </>
                         )}
                       </div>
