@@ -18,10 +18,18 @@ export function ProductCard({ product }: { product: Product }) {
         className="group cursor-pointer"
       >
         <div className="aspect-square mb-4 overflow-hidden">
-          <PlaceholderImage
-            name={product.name}
-            className="w-full h-full group-hover:scale-105 transition-transform duration-700"
-          />
+          {product.heroImage ? (
+            <img
+              src={product.heroImage}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+          ) : (
+            <PlaceholderImage
+              name={product.name}
+              className="w-full h-full group-hover:scale-105 transition-transform duration-700"
+            />
+          )}
         </div>
         <h3 className="text-sm font-medium tracking-wide">{product.name}</h3>
         <p className="text-xs text-warm-500 mt-1">

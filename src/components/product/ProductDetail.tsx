@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
@@ -10,6 +11,13 @@ import { ColorPicker } from '@/components/ui/ColorPicker';
 export function ProductDetail({ product }: { product: Product }) {
   const t = useTranslations();
   const locale = useLocale();
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+
+  // Determine which image to show
+  const heroImage = product.heroImage;
+  // For color variants with images (future: product.colorImages)
+  const selectedColor = product.colors[selectedColorIndex];
+  const displayImage = selectedColor?.hex ? undefined : heroImage; // Could extend with per-color images
 
   return (
     <>
@@ -21,11 +29,21 @@ export function ProductDetail({ product }: { product: Product }) {
           transition={{ duration: 0.8 }}
           className="w-full max-w-2xl px-6"
         >
-          <PlaceholderImage
-            name={product.name}
-            aspect="aspect-square"
-            className="w-full"
-          />
+          {heroImage ? (
+            <div className="aspect-square w-full overflow-hidden">
+              <img
+                src={heroImage}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <PlaceholderImage
+              name={product.name}
+              aspect="aspect-square"
+              className="w-full"
+            />
+          )}
         </motion.div>
       </section>
 
@@ -79,7 +97,11 @@ export function ProductDetail({ product }: { product: Product }) {
                   <h3 className="text-xs tracking-widest uppercase text-warm-400 mb-3">
                     {t('product.selectColor')}
                   </h3>
-                  <ColorPicker colors={product.colors} />
+                  <ColorPicker
+                    colors={product.colors}
+                    selectedIndex={selectedColorIndex}
+                    onSelect={setSelectedColorIndex}
+                  />
                 </div>
               )}
 

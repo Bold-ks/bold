@@ -15,6 +15,7 @@ const SETTINGS_KEYS = [
   { section: 'social', key: 'instagram', label: 'Instagram URL' },
   { section: 'social', key: 'facebook', label: 'Facebook URL' },
   { section: 'social', key: 'tiktok', label: 'TikTok URL' },
+  { section: 'store', key: 'hours', label: 'Store Hours' },
 ];
 
 export default function SettingsPage() {
@@ -116,6 +117,7 @@ export default function SettingsPage() {
     brand: settings.filter((s) => s.section === 'brand'),
     contact: settings.filter((s) => s.section === 'contact'),
     social: settings.filter((s) => s.section === 'social'),
+    store: settings.filter((s) => s.section === 'store'),
   };
 
   return (
@@ -196,6 +198,38 @@ export default function SettingsPage() {
                 placeholder="https://..."
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black"
               />
+            </div>
+          );
+        })}
+      </section>
+      {/* Store Info */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Store Info</h2>
+        {grouped.store.map((s) => {
+          const meta = SETTINGS_KEYS.find((sk) => sk.section === s.section && sk.key === s.key);
+          return (
+            <div key={s.key} className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">{meta?.label}</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <span className="text-xs text-gray-400">English</span>
+                  <textarea
+                    value={s.value_en}
+                    onChange={(e) => updateValue(s.section, s.key, 'value_en', e.target.value)}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black resize-y"
+                  />
+                </div>
+                <div>
+                  <span className="text-xs text-gray-400">Shqip</span>
+                  <textarea
+                    value={s.value_sq}
+                    onChange={(e) => updateValue(s.section, s.key, 'value_sq', e.target.value)}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black resize-y"
+                  />
+                </div>
+              </div>
             </div>
           );
         })}

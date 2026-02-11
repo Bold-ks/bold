@@ -1,14 +1,21 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { getFeaturedProducts } from '@/data/products';
-import { brands } from '@/data/brands';
+import { getFeaturedProducts } from '@/lib/data';
+import { brands } from '@/lib/data';
 import { HeroSection } from '@/components/home/HeroSection';
 import { BrandShowcase } from '@/components/home/BrandShowcase';
 import { FeaturedGrid } from '@/components/home/FeaturedGrid';
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const featured = await getFeaturedProducts();
+
+  return <HomePageClient featured={featured} />;
+}
+
+function HomePageClient({ featured }: { featured: import('@/data/types').Product[] }) {
   const t = useTranslations();
-  const featured = getFeaturedProducts();
 
   return (
     <>

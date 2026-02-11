@@ -3,9 +3,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import { createAdminClient } from '@/lib/supabase/admin-client';
 import { useRouter, useParams } from 'next/navigation';
-import type { Product, ProductVariant, ProductImage, ProductSpec, Brand } from '@/lib/supabase/types';
+import type { ProductVariant, ProductImage, ProductSpec, Brand } from '@/lib/supabase/types';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import type { Media } from '@/lib/supabase/types';
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
 
 export default function ProductEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +24,8 @@ export default function ProductEditPage() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   // Product fields
   const [name, setName] = useState('');
@@ -67,10 +78,24 @@ export default function ProductEditPage() {
     setVariants(data.product_variants || []);
     setImages(data.product_images || []);
     setSpecs(data.product_specs || []);
+    setSlugManuallyEdited(true); // Don't auto-generate for existing products
     setLoading(false);
   }, [id, isNew, router]);
 
   useEffect(() => { loadProduct(); }, [loadProduct]);
+
+  // Auto-generate slug from name for new products
+  function handleNameChange(newName: string) {
+    setName(newName);
+    if (isNew && !slugManuallyEdited) {
+      setSlug(slugify(newName));
+    }
+  }
+
+  function handleSlugChange(newSlug: string) {
+    setSlug(newSlug);
+    setSlugManuallyEdited(true);
+  }
 
   async function handleSave() {
     if (!name || !slug || !catEn) {
@@ -231,10 +256,52 @@ export default function ProductEditPage() {
 
   async function handleDeleteImage(img: Partial<ProductImage>) {
     if (!img.id) return;
+    if (!confirm('Remove this image?')) return;
     const supabase = createAdminClient();
     await supabase.from('product_images').delete().eq('id', img.id);
     setImages((prev) => prev.filter((i) => i.id !== img.id));
     toast.success('Image removed');
+  }
+
+  async function handleToggleHero(img: Partial<ProductImage>) {
+    if (!img.id) return;
+    const supabase = createAdminClient();
+    // Unset all heroes first
+    await supabase.from('product_images').update({ is_hero: false }).eq('product_id', id);
+    // Set this one
+    await supabase.from('product_images').update({ is_hero: true }).eq('id', img.id);
+    setImages((prev) =>
+      prev.map((i) => ({ ...i, is_hero: i.id === img.id }))
+    );
+    toast.success('Hero image updated');
+  }
+
+  function handleMediaSelect(media: Media) {
+    if (isNew) {
+      toast.error('Save the product first');
+      return;
+    }
+    // Add from media library
+    const supabase = createAdminClient();
+    supabase
+      .from('product_images')
+      .insert({
+        product_id: id,
+        url: media.url,
+        alt_text: media.alt_text || name,
+        is_hero: images.length === 0,
+        sort_order: images.length,
+      })
+      .select()
+      .single()
+      .then(({ data, error }: { data: ProductImage | null; error: unknown }) => {
+        if (error) {
+          toast.error('Failed to add image');
+          return;
+        }
+        if (data) setImages((prev) => [...prev, data]);
+        toast.success('Image added from media library');
+      });
   }
 
   if (loading) {
@@ -254,10 +321,22 @@ export default function ProductEditPage() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center gap-3">
-        <Link href="/admin/products" className="text-gray-400 hover:text-black text-sm">← Products</Link>
-        <span className="text-gray-300">/</span>
-        <h1 className="text-xl font-semibold">{isNew ? 'New Product' : name}</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <Link href="/admin/products" className="text-gray-400 hover:text-black text-sm">← Products</Link>
+          <span className="text-gray-300">/</span>
+          <h1 className="text-xl font-semibold">{isNew ? 'New Product' : name}</h1>
+        </div>
+        {!isNew && slug && (
+          <a
+            href={`/en/${brand}/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            View on site ↗
+          </a>
+        )}
       </div>
 
       {/* Basic Info */}
@@ -265,8 +344,8 @@ export default function ProductEditPage() {
         <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Basic Info</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Name" value={name} onChange={setName} />
-          <Field label="Slug" value={slug} onChange={setSlug} />
+          <Field label="Name" value={name} onChange={handleNameChange} />
+          <Field label="Slug" value={slug} onChange={handleSlugChange} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -386,10 +465,18 @@ export default function ProductEditPage() {
       <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Images</h2>
-          <label className="text-sm text-black hover:underline cursor-pointer">
-            + Upload
-            <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
-          </label>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowMediaPicker(true)}
+              className="text-sm text-black hover:underline"
+            >
+              📷 From Library
+            </button>
+            <label className="text-sm text-black hover:underline cursor-pointer">
+              + Upload
+              <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
+            </label>
+          </div>
         </div>
 
         {images.length === 0 ? (
@@ -407,12 +494,24 @@ export default function ProductEditPage() {
                 {img.is_hero && (
                   <span className="absolute top-1 left-1 text-[10px] bg-black text-white px-1.5 py-0.5 rounded">Hero</span>
                 )}
-                <button
-                  onClick={() => handleDeleteImage(img)}
-                  className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                >
-                  ✕
-                </button>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {!img.is_hero && (
+                    <button
+                      onClick={() => handleToggleHero(img)}
+                      className="w-6 h-6 bg-black/70 text-white rounded-full text-xs flex items-center justify-center"
+                      title="Set as hero"
+                    >
+                      ★
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDeleteImage(img)}
+                    className="w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -506,6 +605,12 @@ export default function ProductEditPage() {
           {saving ? 'Saving…' : isNew ? 'Create Product' : 'Save Changes'}
         </button>
       </div>
+
+      <MediaPickerModal
+        open={showMediaPicker}
+        onClose={() => setShowMediaPicker(false)}
+        onSelect={handleMediaSelect}
+      />
 
       <style jsx global>{`
         .input-field {

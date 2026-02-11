@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { getBrand } from '@/data/brands';
-import { getProductsByBrand } from '@/data/products';
+import { getBrand, getProductsByBrand } from '@/lib/data';
 import { BrandHero } from '@/components/brand/BrandHero';
 import { ProductGrid } from '@/components/brand/ProductGrid';
+
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{ brand: string; locale: string }>;
@@ -15,7 +15,7 @@ export default async function BrandPage({ params }: Props) {
   const brand = getBrand(brandSlug);
   if (!brand) notFound();
 
-  const products = getProductsByBrand(brandSlug);
+  const products = await getProductsByBrand(brandSlug);
 
   return (
     <>
