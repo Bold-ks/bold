@@ -120,6 +120,20 @@ export interface Database {
         };
         Update: Partial<Database['public']['Tables']['media']['Insert']>;
       };
+      brand_categories: {
+        Row: {
+          id: string;
+          brand: string;
+          category_en: string;
+          category_sq: string;
+          subcategory_en: string | null;
+          subcategory_sq: string | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['brand_categories']['Row'], 'id' | 'created_at'> & { id?: string; created_at?: string };
+        Update: Partial<Database['public']['Tables']['brand_categories']['Insert']>;
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -139,6 +153,7 @@ export type ProductSpec = Database['public']['Tables']['product_specs']['Row'];
 export type ProductSpecInsert = Database['public']['Tables']['product_specs']['Insert'];
 export type SiteContent = Database['public']['Tables']['site_content']['Row'];
 export type Media = Database['public']['Tables']['media']['Row'];
+export type BrandCategory = Database['public']['Tables']['brand_categories']['Row'];
 
 export interface ProductWithRelations extends Product {
   product_variants: ProductVariant[];

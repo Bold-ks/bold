@@ -18,7 +18,7 @@ interface ContentBlock {
   sort_order: number;
 }
 
-const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; label: string; fields: FieldDef[] }[] }> = {
+const PAGE_SECTIONS: Record<string, { label: string; sections: SectionDef[] }> = {
   home: {
     label: 'Homepage',
     sections: [
@@ -65,6 +65,7 @@ const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; lab
           { key: 'hero-media', label: 'Hero Image or Video', type: 'media' },
         ],
       },
+      { id: 'categories', label: '📁 Categories & Subcategories', fields: [], dynamic: 'brand-categories' },
     ],
   },
   devialet: {
@@ -79,6 +80,7 @@ const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; lab
           { key: 'hero-media', label: 'Hero Image or Video', type: 'media' },
         ],
       },
+      { id: 'categories', label: '📁 Categories & Subcategories', fields: [], dynamic: 'brand-categories' },
     ],
   },
   loewe: {
@@ -93,6 +95,7 @@ const PAGE_SECTIONS: Record<string, { label: string; sections: { id: string; lab
           { key: 'hero-media', label: 'Hero Image or Video', type: 'media' },
         ],
       },
+      { id: 'categories', label: '📁 Categories & Subcategories', fields: [], dynamic: 'brand-categories' },
     ],
   },
   about: {
@@ -166,6 +169,23 @@ interface FieldDef {
   placeholder?: string;
 }
 
+interface SectionDef {
+  id: string;
+  label: string;
+  fields: FieldDef[];
+  dynamic?: string;
+}
+
+interface BrandCategoryRow {
+  id: string;
+  brand: string;
+  category_en: string;
+  category_sq: string;
+  subcategory_en: string | null;
+  subcategory_sq: string | null;
+  sort_order: number;
+}
+
 export default function ContentPage() {
   const [content, setContent] = useState<ContentBlock[]>([]);
   const [loading, setLoading] = useState(true);
@@ -176,10 +196,77 @@ export default function ContentPage() {
   const [uploadTargetKey, setUploadTargetKey] = useState<string | null>(null);
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [mediaPickerTarget, setMediaPickerTarget] = useState<string | null>(null);
+  const [brandCategories, setBrandCategories] = useState<BrandCategoryRow[]>([]);
+  const [savingCats, setSavingCats] = useState(false);
 
   useEffect(() => {
     loadContent();
+    loadBrandCategories();
   }, []);
+
+  async function loadBrandCategories() {
+    const supabase = createAdminClient();
+    const { data } = await supabase.from('brand_categories').select('*').order('sort_order');
+    setBrandCategories((data as BrandCategoryRow[]) || []);
+  }
+
+  function addCategory(brand: string) {
+    setBrandCategories((prev) => [
+      ...prev,
+      {
+        id: `new-${Date.now()}-${Math.random()}`,
+        brand,
+        category_en: '',
+        category_sq: '',
+        subcategory_en: null,
+        subcategory_sq: null,
+        sort_order: prev.filter((c) => c.brand === brand).length,
+      },
+    ]);
+  }
+
+  function updateCategory(id: string, field: string, value: string) {
+    setBrandCategories((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, [field]: value || null } : c))
+    );
+  }
+
+  function removeCategory(id: string) {
+    setBrandCategories((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  async function saveBrandCategories(brand: string) {
+    setSavingCats(true);
+    const supabase = createAdminClient();
+    const brandCats = brandCategories.filter((c) => c.brand === brand);
+
+    try {
+      // Delete all for this brand
+      await supabase.from('brand_categories').delete().eq('brand', brand);
+
+      // Insert current
+      if (brandCats.length > 0) {
+        const toInsert = brandCats.map((c, i) => ({
+          brand: c.brand,
+          category_en: c.category_en,
+          category_sq: c.category_sq,
+          subcategory_en: c.subcategory_en || null,
+          subcategory_sq: c.subcategory_sq || null,
+          sort_order: i,
+        }));
+        const { error } = await supabase.from('brand_categories').insert(toInsert);
+        if (error) throw error;
+      }
+
+      toast.success('Categories saved!');
+      await loadBrandCategories();
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to save categories');
+    } finally {
+      setSavingCats(false);
+    }
+  }
 
   async function loadContent() {
     const supabase = createAdminClient();
@@ -367,7 +454,77 @@ export default function ContentPage() {
       </div>
 
       {/* Sections */}
-      {pageConfig?.sections.map((section) => (
+      {pageConfig?.sections.map((section) => {
+        // Dynamic: brand categories editor
+        if (section.dynamic === 'brand-categories') {
+          const brandId = activePage; // e.g. 'bang-olufsen', 'devialet', 'loewe'
+          const cats = brandCategories.filter((c) => c.brand === brandId);
+
+          return (
+            <div key={section.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                <h2 className="text-sm font-semibold">{section.label}</h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => addCategory(brandId)}
+                    className="text-sm text-black hover:underline"
+                  >
+                    + Add
+                  </button>
+                  <button
+                    onClick={() => saveBrandCategories(brandId)}
+                    disabled={savingCats}
+                    className="px-4 py-1.5 bg-black text-white text-xs font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+                  >
+                    {savingCats ? 'Saving…' : 'Save Categories'}
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-3">
+                {cats.length === 0 && <p className="text-sm text-gray-400">No categories yet</p>}
+                {cats.map((cat) => (
+                  <div key={cat.id} className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center">
+                    <input
+                      value={cat.category_en}
+                      onChange={(e) => updateCategory(cat.id, 'category_en', e.target.value)}
+                      placeholder="Category (EN)"
+                      className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                    />
+                    <input
+                      value={cat.category_sq}
+                      onChange={(e) => updateCategory(cat.id, 'category_sq', e.target.value)}
+                      placeholder="Category (SQ)"
+                      className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                    />
+                    <input
+                      value={cat.subcategory_en || ''}
+                      onChange={(e) => updateCategory(cat.id, 'subcategory_en', e.target.value)}
+                      placeholder="Subcategory (EN)"
+                      className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                    />
+                    <input
+                      value={cat.subcategory_sq || ''}
+                      onChange={(e) => updateCategory(cat.id, 'subcategory_sq', e.target.value)}
+                      placeholder="Subcategory (SQ)"
+                      className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                    />
+                    <button
+                      onClick={() => removeCategory(cat.id)}
+                      className="text-red-400 hover:text-red-600 text-sm justify-self-start"
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+                ))}
+                <p className="text-xs text-gray-400 mt-2">
+                  Leave subcategory empty for top-level categories. Categories are shared across EN and SQ.
+                </p>
+              </div>
+            </div>
+          );
+        }
+
+        return (
         <div key={section.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
             <h2 className="text-sm font-semibold">{section.label}</h2>
@@ -489,7 +646,8 @@ export default function ContentPage() {
             })}
           </div>
         </div>
-      ))}
+        );
+      })}
 
       {/* Hidden file input */}
       <input

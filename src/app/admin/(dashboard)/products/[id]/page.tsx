@@ -47,6 +47,9 @@ export default function ProductEditPage() {
   const [images, setImages] = useState<Partial<ProductImage>[]>([]);
   const [specs, setSpecs] = useState<Partial<ProductSpec>[]>([]);
 
+  // Brand categories for dropdowns
+  const [brandCategories, setBrandCategories] = useState<{ id: string; brand: string; category_en: string; category_sq: string; subcategory_en: string | null; subcategory_sq: string | null }[]>([]);
+
   const loadProduct = useCallback(async () => {
     if (isNew) return;
     const supabase = createAdminClient();
@@ -82,7 +85,13 @@ export default function ProductEditPage() {
     setLoading(false);
   }, [id, isNew, router]);
 
-  useEffect(() => { loadProduct(); }, [loadProduct]);
+  useEffect(() => { loadProduct(); loadCategories(); }, [loadProduct]);
+
+  async function loadCategories() {
+    const supabase = createAdminClient();
+    const { data } = await supabase.from('brand_categories').select('*').order('sort_order');
+    setBrandCategories((data as typeof brandCategories) || []);
+  }
 
   // Auto-generate slug from name for new products
   function handleNameChange(newName: string) {
@@ -427,19 +436,76 @@ export default function ProductEditPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-            <select value={brand} onChange={(e) => setBrand(e.target.value as Brand)} className="input-field">
+            <select
+              value={brand}
+              onChange={(e) => {
+                setBrand(e.target.value as Brand);
+                setCatEn(''); setCatSq(''); setSubcatEn(''); setSubcatSq('');
+              }}
+              className="input-field"
+            >
               <option value="bang-olufsen">Bang & Olufsen</option>
               <option value="devialet">Devialet</option>
               <option value="loewe">Loewe</option>
             </select>
           </div>
-          <Field label="Category (EN)" value={catEn} onChange={setCatEn} />
-          <Field label="Category (SQ)" value={catSq} onChange={setCatSq} />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Subcategory (EN)" value={subcatEn} onChange={setSubcatEn} />
-          <Field label="Subcategory (SQ)" value={subcatSq} onChange={setSubcatSq} />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            {(() => {
+              const cats = brandCategories.filter((c) => c.brand === brand);
+              // Unique categories for this brand
+              const uniqueCats = [...new Map(cats.map((c) => [c.category_en, c])).values()];
+              return (
+                <select
+                  value={catEn}
+                  onChange={(e) => {
+                    const selected = uniqueCats.find((c) => c.category_en === e.target.value);
+                    setCatEn(selected?.category_en || e.target.value);
+                    setCatSq(selected?.category_sq || '');
+                    setSubcatEn(''); setSubcatSq('');
+                  }}
+                  className="input-field"
+                >
+                  <option value="">Select category…</option>
+                  {uniqueCats.map((c) => (
+                    <option key={c.category_en} value={c.category_en}>
+                      {c.category_en} / {c.category_sq}
+                    </option>
+                  ))}
+                </select>
+              );
+            })()}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
+            {(() => {
+              const subcats = brandCategories.filter(
+                (c) => c.brand === brand && c.category_en === catEn && c.subcategory_en
+              );
+              return subcats.length > 0 ? (
+                <select
+                  value={subcatEn}
+                  onChange={(e) => {
+                    const selected = subcats.find((c) => c.subcategory_en === e.target.value);
+                    setSubcatEn(selected?.subcategory_en || '');
+                    setSubcatSq(selected?.subcategory_sq || '');
+                  }}
+                  className="input-field"
+                >
+                  <option value="">None</option>
+                  {subcats.map((c) => (
+                    <option key={c.subcategory_en} value={c.subcategory_en!}>
+                      {c.subcategory_en} / {c.subcategory_sq}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <select className="input-field" disabled>
+                  <option>No subcategories</option>
+                </select>
+              );
+            })()}
+          </div>
         </div>
 
         <div>
