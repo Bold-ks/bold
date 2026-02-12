@@ -558,6 +558,99 @@ export default function ProductEditPage() {
         )}
       </div>
 
+      {/* Product Hero */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Hero Section</h2>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={heroEnabled} onChange={(e) => setHeroEnabled(e.target.checked)} className="rounded" />
+            Enabled
+          </label>
+        </div>
+
+        {heroEnabled && (
+          <>
+            <p className="text-xs text-gray-400">Full-width hero banner shown above the product details. Supports image or video backgrounds.</p>
+
+            {/* Hero Media */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Background (Image or Video)</label>
+              {heroMediaUrl ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative w-48 h-28 rounded overflow-hidden border border-gray-200">
+                    {heroMediaUrl.match(/\.(mp4|webm|mov)$/i) ? (
+                      <video src={heroMediaUrl} className="w-full h-full object-cover" muted />
+                    ) : (
+                      <img src={heroMediaUrl} alt="" className="w-full h-full object-cover" />
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <button onClick={() => setShowHeroMediaPicker(true)} className="text-xs text-gray-500 hover:text-black">Replace</button>
+                    <button onClick={() => setHeroMediaUrl('')} className="text-xs text-red-400 hover:text-red-600">Remove</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <label className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300 cursor-pointer">
+                    {isNew ? 'Save product first' : '+ Upload'}
+                    {!isNew && (
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const supabase = createAdminClient();
+                          const ext = file.name.split('.').pop();
+                          const path = `${id}/hero-bg-${Date.now()}.${ext}`;
+                          const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
+                          if (uploadError) { toast.error('Upload failed'); return; }
+                          const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
+                          setHeroMediaUrl(publicUrl);
+                          await supabase.from('media').insert({ url: publicUrl, filename: file.name, mime_type: file.type, size: file.size, alt_text: `${name} - hero` });
+                          toast.success('Hero media uploaded');
+                          e.target.value = '';
+                        }}
+                      />
+                    )}
+                  </label>
+                  {!isNew && (
+                    <button
+                      onClick={() => setShowHeroMediaPicker(true)}
+                      className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300"
+                    >
+                      From Library
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Hero Text */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Hero Title (EN)" value={heroTitleEn} onChange={setHeroTitleEn} />
+              <Field label="Hero Title (SQ)" value={heroTitleSq} onChange={setHeroTitleSq} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Hero Subtitle (EN)" value={heroSubtitleEn} onChange={setHeroSubtitleEn} />
+              <Field label="Hero Subtitle (SQ)" value={heroSubtitleSq} onChange={setHeroSubtitleSq} />
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* Hero Media Picker */}
+      <MediaPickerModal
+        open={showHeroMediaPicker}
+        onClose={() => setShowHeroMediaPicker(false)}
+        onSelect={(media: Media) => {
+          setHeroMediaUrl(media.url);
+          setShowHeroMediaPicker(false);
+          toast.success('Hero media set from library');
+        }}
+      />
+
       {/* Basic Info */}
       <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
         <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Basic Info</h2>
@@ -656,11 +749,6 @@ export default function ProductEditPage() {
           <textarea value={descSq} onChange={(e) => setDescSq(e.target.value)} rows={3} className="input-field" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Tagline (EN)" value={taglineEn} onChange={setTaglineEn} />
-          <Field label="Tagline (SQ)" value={taglineSq} onChange={setTaglineSq} />
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Field label="Base Price (€)" value={basePrice} onChange={setBasePrice} type="number" />
           <Field label="Sort Order" value={sortOrder.toString()} onChange={(v) => setSortOrder(parseInt(v) || 0)} type="number" />
@@ -678,111 +766,12 @@ export default function ProductEditPage() {
         </div>
       </section>
 
-      {/* Product Hero */}
-      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+      {/* Featured Image — only shown when Featured is enabled */}
+      {isFeatured && (
+      <>
+      <section className="bg-white rounded-xl border p-6 space-y-4 transition-all border-amber-300 ring-1 ring-amber-200">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Hero Section</h2>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={heroEnabled} onChange={(e) => setHeroEnabled(e.target.checked)} className="rounded" />
-            Enabled
-          </label>
-        </div>
-
-        {heroEnabled && (
-          <>
-            <p className="text-xs text-gray-400">Full-width hero banner shown above the product details. Supports image or video backgrounds.</p>
-
-            {/* Hero Media */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Background (Image or Video)</label>
-              {heroMediaUrl ? (
-                <div className="flex items-center gap-3">
-                  <div className="relative w-48 h-28 rounded overflow-hidden border border-gray-200">
-                    {heroMediaUrl.match(/\.(mp4|webm|mov)$/i) ? (
-                      <video src={heroMediaUrl} className="w-full h-full object-cover" muted />
-                    ) : (
-                      <img src={heroMediaUrl} alt="" className="w-full h-full object-cover" />
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <button onClick={() => setShowHeroMediaPicker(true)} className="text-xs text-gray-500 hover:text-black">Replace</button>
-                    <button onClick={() => setHeroMediaUrl('')} className="text-xs text-red-400 hover:text-red-600">Remove</button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex gap-3">
-                  <label className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300 cursor-pointer">
-                    {isNew ? 'Save product first' : '+ Upload'}
-                    {!isNew && (
-                      <input
-                        type="file"
-                        accept="image/*,video/*"
-                        className="hidden"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (!file) return;
-                          const supabase = createAdminClient();
-                          const ext = file.name.split('.').pop();
-                          const path = `${id}/hero-bg-${Date.now()}.${ext}`;
-                          const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
-                          if (uploadError) { toast.error('Upload failed'); return; }
-                          const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
-                          setHeroMediaUrl(publicUrl);
-                          await supabase.from('media').insert({ url: publicUrl, filename: file.name, mime_type: file.type, size: file.size, alt_text: `${name} - hero` });
-                          toast.success('Hero media uploaded');
-                          e.target.value = '';
-                        }}
-                      />
-                    )}
-                  </label>
-                  {!isNew && (
-                    <button
-                      onClick={() => setShowHeroMediaPicker(true)}
-                      className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300"
-                    >
-                      From Library
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Hero Text */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Hero Title (EN)" value={heroTitleEn} onChange={setHeroTitleEn} />
-              <Field label="Hero Title (SQ)" value={heroTitleSq} onChange={setHeroTitleSq} />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Hero Subtitle (EN)" value={heroSubtitleEn} onChange={setHeroSubtitleEn} />
-              <Field label="Hero Subtitle (SQ)" value={heroSubtitleSq} onChange={setHeroSubtitleSq} />
-            </div>
-          </>
-        )}
-      </section>
-
-      {/* Hero Media Picker */}
-      <MediaPickerModal
-        open={showHeroMediaPicker}
-        onClose={() => setShowHeroMediaPicker(false)}
-        onSelect={(media: Media) => {
-          setHeroMediaUrl(media.url);
-          setShowHeroMediaPicker(false);
-          toast.success('Hero media set from library');
-        }}
-      />
-
-      {/* Featured Image */}
-      <section className={`bg-white rounded-xl border p-6 space-y-4 transition-all ${isFeatured ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-200'}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Featured Image</h2>
-            {isFeatured && (
-              <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Featured</span>
-            )}
-          </div>
-          {!isFeatured && (
-            <p className="text-xs text-gray-400">Mark product as Featured to use this</p>
-          )}
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Featured Image</h2>
         </div>
 
         <p className="text-xs text-gray-400">
@@ -859,6 +848,8 @@ export default function ProductEditPage() {
           toast.success('Featured image set from library');
         }}
       />
+      </>
+      )}
 
       {/* Variants */}
       <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
@@ -979,129 +970,6 @@ export default function ProductEditPage() {
         })}
       </section>
 
-      {/* Images */}
-      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Images</h2>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowMediaPicker(true)}
-              className="text-sm text-black hover:underline"
-            >
-              📷 From Library
-            </button>
-            <label className="text-sm text-black hover:underline cursor-pointer">
-              + Upload
-              <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
-            </label>
-          </div>
-        </div>
-
-        {images.length === 0 ? (
-          <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-            <label className="cursor-pointer text-sm text-gray-400 hover:text-gray-600">
-              {isNew ? 'Save product first, then upload images' : 'Drop images here or click to upload'}
-              {!isNew && <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />}
-            </label>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {images.map((img, i) => (
-              <div key={img.id || i} className="relative group rounded-lg overflow-hidden border border-gray-200">
-                <img src={img.url} alt={img.alt_text || ''} className="w-full h-32 object-cover" />
-                {img.is_hero && (
-                  <span className="absolute top-1 left-1 text-[10px] bg-black text-white px-1.5 py-0.5 rounded">Hero</span>
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {!img.is_hero && (
-                    <button
-                      onClick={() => handleToggleHero(img)}
-                      className="w-6 h-6 bg-black/70 text-white rounded-full text-xs flex items-center justify-center"
-                      title="Set as hero"
-                    >
-                      ★
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDeleteImage(img)}
-                    className="w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Specs */}
-      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Specifications</h2>
-          <button
-            onClick={() => setSpecs([...specs, { spec_key_sq: '', spec_key_en: '', spec_value_sq: '', spec_value_en: '' }])}
-            className="text-sm text-black hover:underline"
-          >
-            + Add Spec
-          </button>
-        </div>
-
-        {specs.length === 0 && <p className="text-sm text-gray-400">No specifications yet</p>}
-
-        {specs.map((s, i) => (
-          <div key={i} className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-center">
-            <input
-              value={s.spec_key_en || ''}
-              onChange={(e) => {
-                const updated = [...specs];
-                updated[i] = { ...updated[i], spec_key_en: e.target.value };
-                setSpecs(updated);
-              }}
-              placeholder="Key (EN)"
-              className="input-field"
-            />
-            <input
-              value={s.spec_key_sq || ''}
-              onChange={(e) => {
-                const updated = [...specs];
-                updated[i] = { ...updated[i], spec_key_sq: e.target.value };
-                setSpecs(updated);
-              }}
-              placeholder="Key (SQ)"
-              className="input-field"
-            />
-            <input
-              value={s.spec_value_en || ''}
-              onChange={(e) => {
-                const updated = [...specs];
-                updated[i] = { ...updated[i], spec_value_en: e.target.value };
-                setSpecs(updated);
-              }}
-              placeholder="Value (EN)"
-              className="input-field"
-            />
-            <input
-              value={s.spec_value_sq || ''}
-              onChange={(e) => {
-                const updated = [...specs];
-                updated[i] = { ...updated[i], spec_value_sq: e.target.value };
-                setSpecs(updated);
-              }}
-              placeholder="Value (SQ)"
-              className="input-field"
-            />
-            <button
-              onClick={() => setSpecs(specs.filter((_, j) => j !== i))}
-              className="text-red-400 hover:text-red-600 text-sm justify-self-start"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </section>
-
       {/* Service Badges */}
       <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
         <div className="flex items-center justify-between">
@@ -1162,6 +1030,63 @@ export default function ProductEditPage() {
             </button>
           </div>
         ))}
+      </section>
+
+      {/* Images */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Images</h2>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowMediaPicker(true)}
+              className="text-sm text-black hover:underline"
+            >
+              📷 From Library
+            </button>
+            <label className="text-sm text-black hover:underline cursor-pointer">
+              + Upload
+              <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
+            </label>
+          </div>
+        </div>
+
+        {images.length === 0 ? (
+          <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+            <label className="cursor-pointer text-sm text-gray-400 hover:text-gray-600">
+              {isNew ? 'Save product first, then upload images' : 'Drop images here or click to upload'}
+              {!isNew && <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />}
+            </label>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {images.map((img, i) => (
+              <div key={img.id || i} className="relative group rounded-lg overflow-hidden border border-gray-200">
+                <img src={img.url} alt={img.alt_text || ''} className="w-full h-32 object-cover" />
+                {img.is_hero && (
+                  <span className="absolute top-1 left-1 text-[10px] bg-black text-white px-1.5 py-0.5 rounded">Hero</span>
+                )}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {!img.is_hero && (
+                    <button
+                      onClick={() => handleToggleHero(img)}
+                      className="w-6 h-6 bg-black/70 text-white rounded-full text-xs flex items-center justify-center"
+                      title="Set as hero"
+                    >
+                      ★
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDeleteImage(img)}
+                    className="w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Product Story */}
@@ -1363,6 +1288,72 @@ export default function ProductEditPage() {
           }
         }}
       />
+
+      {/* Specs */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Specifications</h2>
+          <button
+            onClick={() => setSpecs([...specs, { spec_key_sq: '', spec_key_en: '', spec_value_sq: '', spec_value_en: '' }])}
+            className="text-sm text-black hover:underline"
+          >
+            + Add Spec
+          </button>
+        </div>
+
+        {specs.length === 0 && <p className="text-sm text-gray-400">No specifications yet</p>}
+
+        {specs.map((s, i) => (
+          <div key={i} className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-center">
+            <input
+              value={s.spec_key_en || ''}
+              onChange={(e) => {
+                const updated = [...specs];
+                updated[i] = { ...updated[i], spec_key_en: e.target.value };
+                setSpecs(updated);
+              }}
+              placeholder="Key (EN)"
+              className="input-field"
+            />
+            <input
+              value={s.spec_key_sq || ''}
+              onChange={(e) => {
+                const updated = [...specs];
+                updated[i] = { ...updated[i], spec_key_sq: e.target.value };
+                setSpecs(updated);
+              }}
+              placeholder="Key (SQ)"
+              className="input-field"
+            />
+            <input
+              value={s.spec_value_en || ''}
+              onChange={(e) => {
+                const updated = [...specs];
+                updated[i] = { ...updated[i], spec_value_en: e.target.value };
+                setSpecs(updated);
+              }}
+              placeholder="Value (EN)"
+              className="input-field"
+            />
+            <input
+              value={s.spec_value_sq || ''}
+              onChange={(e) => {
+                const updated = [...specs];
+                updated[i] = { ...updated[i], spec_value_sq: e.target.value };
+                setSpecs(updated);
+              }}
+              placeholder="Value (SQ)"
+              className="input-field"
+            />
+            <button
+              onClick={() => setSpecs(specs.filter((_, j) => j !== i))}
+              className="text-red-400 hover:text-red-600 text-sm justify-self-start"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </section>
 
       {/* Actions */}
       <div className="flex items-center justify-between">
