@@ -73,6 +73,7 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
   images: { url: string; alt_text?: string | null; is_hero?: boolean; variant_id?: string | null }[];
   specs: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
   variants: { id: string; color_name: string; color_hex: string | null; price: number | null }[];
+  badges: { icon: string; text_en: string; text_sq: string; sort_order: number }[];
 }> {
   if (isSupabaseConfigured) {
     try {
@@ -107,13 +108,21 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
             color_hex: v.color_hex,
             price: v.price,
           }));
-        return { images, specs, variants };
+        const badges = (product.product_badges || [])
+          .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
+          .map((b: { icon: string; text_en: string; text_sq: string; sort_order: number }) => ({
+            icon: b.icon,
+            text_en: b.text_en,
+            text_sq: b.text_sq,
+            sort_order: b.sort_order,
+          }));
+        return { images, specs, variants, badges };
       }
     } catch (e) {
       console.error('Failed to get images/specs from Supabase:', e);
     }
   }
-  return { images: [], specs: [], variants: [] };
+  return { images: [], specs: [], variants: [], badges: [] };
 }
 
 // Map Supabase product to static product shape for backwards compatibility

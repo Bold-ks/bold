@@ -155,8 +155,18 @@ export type SiteContent = Database['public']['Tables']['site_content']['Row'];
 export type Media = Database['public']['Tables']['media']['Row'];
 export type BrandCategory = Database['public']['Tables']['brand_categories']['Row'];
 
+export interface ProductBadge {
+  id: string;
+  product_id: string;
+  icon: string;
+  text_en: string;
+  text_sq: string;
+  sort_order: number;
+}
+
 export interface ProductWithRelations extends Product {
   product_variants: ProductVariant[];
   product_images: ProductImage[];
   product_specs: ProductSpec[];
+  product_badges?: ProductBadge[];
 }

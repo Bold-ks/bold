@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { createAdminClient } from '@/lib/supabase/admin-client';
 import { useRouter, useParams } from 'next/navigation';
-import type { ProductVariant, ProductImage, ProductSpec, Brand } from '@/lib/supabase/types';
+import type { ProductVariant, ProductImage, ProductSpec, ProductBadge, Brand } from '@/lib/supabase/types';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
@@ -46,6 +46,7 @@ export default function ProductEditPage() {
   const [variants, setVariants] = useState<Partial<ProductVariant>[]>([]);
   const [images, setImages] = useState<Partial<ProductImage>[]>([]);
   const [specs, setSpecs] = useState<Partial<ProductSpec>[]>([]);
+  const [badges, setBadges] = useState<Partial<ProductBadge>[]>([]);
 
   // Brand categories for dropdowns
   const [brandCategories, setBrandCategories] = useState<{ id: string; brand: string; category_en: string; category_sq: string; subcategory_en: string | null; subcategory_sq: string | null }[]>([]);
@@ -55,7 +56,7 @@ export default function ProductEditPage() {
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from('products')
-      .select('*, product_variants(*), product_images(*), product_specs(*)')
+      .select('*, product_variants(*), product_images(*), product_specs(*), product_badges(*)')
       .eq('id', id)
       .single();
 
@@ -81,6 +82,7 @@ export default function ProductEditPage() {
     setVariants(data.product_variants || []);
     setImages(data.product_images || []);
     setSpecs(data.product_specs || []);
+    setBadges((data.product_badges || []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order));
     setSlugManuallyEdited(true); // Don't auto-generate for existing products
     setLoading(false);
   }, [id, isNew, router]);
@@ -196,6 +198,23 @@ export default function ProductEditPage() {
           }))
         );
         if (error) throw error;
+      }
+
+      // Save badges
+      if (!isNew) {
+        await supabase.from('product_badges').delete().eq('product_id', productId);
+      }
+      if (badges.length > 0) {
+        const { error: badgeError } = await supabase.from('product_badges').insert(
+          badges.map((b, i) => ({
+            product_id: productId,
+            icon: b.icon || 'star',
+            text_en: b.text_en || '',
+            text_sq: b.text_sq || '',
+            sort_order: i,
+          }))
+        );
+        if (badgeError) throw badgeError;
       }
 
       toast.success(isNew ? 'Product created' : 'Product saved');
@@ -769,6 +788,68 @@ export default function ProductEditPage() {
             <button
               onClick={() => setSpecs(specs.filter((_, j) => j !== i))}
               className="text-red-400 hover:text-red-600 text-sm justify-self-start"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </section>
+
+      {/* Service Badges */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Service Badges</h2>
+          <button
+            onClick={() => setBadges([...badges, { icon: 'star', text_en: '', text_sq: '' }])}
+            className="text-sm text-black hover:underline"
+          >
+            + Add Badge
+          </button>
+        </div>
+
+        {badges.length === 0 && <p className="text-sm text-gray-400">No service badges yet</p>}
+
+        {badges.map((b, i) => (
+          <div key={i} className="grid grid-cols-2 sm:grid-cols-[120px_1fr_1fr_auto] gap-2 items-center">
+            <select
+              value={b.icon || 'star'}
+              onChange={(e) => {
+                const updated = [...badges];
+                updated[i] = { ...updated[i], icon: e.target.value };
+                setBadges(updated);
+              }}
+              className="input-field"
+            >
+              <option value="tools">🔧 Tools</option>
+              <option value="phone">📞 Phone</option>
+              <option value="shield">🛡️ Shield</option>
+              <option value="truck">🚚 Truck</option>
+              <option value="clock">🕐 Clock</option>
+              <option value="star">⭐ Star</option>
+            </select>
+            <input
+              value={b.text_en || ''}
+              onChange={(e) => {
+                const updated = [...badges];
+                updated[i] = { ...updated[i], text_en: e.target.value };
+                setBadges(updated);
+              }}
+              placeholder="Text (EN)"
+              className="input-field"
+            />
+            <input
+              value={b.text_sq || ''}
+              onChange={(e) => {
+                const updated = [...badges];
+                updated[i] = { ...updated[i], text_sq: e.target.value };
+                setBadges(updated);
+              }}
+              placeholder="Text (SQ)"
+              className="input-field"
+            />
+            <button
+              onClick={() => setBadges(badges.filter((_, j) => j !== i))}
+              className="text-red-400 hover:text-red-600 text-sm"
             >
               ✕
             </button>

@@ -41,7 +41,7 @@ export async function getProductBySlug(slug: string): Promise<ProductWithRelatio
   const supabase = await getSupabase();
   const { data } = await supabase
     .from('products')
-    .select('*, product_variants(*), product_images(*), product_specs(*)')
+    .select('*, product_variants(*), product_images(*), product_specs(*), product_badges(*)')
     .eq('slug', slug)
     .single();
   return data ? (data as unknown as ProductWithRelations) : null;
