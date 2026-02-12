@@ -52,6 +52,15 @@ export default function ProductEditPage() {
   const [specs, setSpecs] = useState<Partial<ProductSpec>[]>([]);
   const [badges, setBadges] = useState<Partial<ProductBadge>[]>([]);
 
+  // Product Hero
+  const [heroEnabled, setHeroEnabled] = useState(false);
+  const [heroMediaUrl, setHeroMediaUrl] = useState('');
+  const [heroTitleEn, setHeroTitleEn] = useState('');
+  const [heroTitleSq, setHeroTitleSq] = useState('');
+  const [heroSubtitleEn, setHeroSubtitleEn] = useState('');
+  const [heroSubtitleSq, setHeroSubtitleSq] = useState('');
+  const [showHeroMediaPicker, setShowHeroMediaPicker] = useState(false);
+
   // Product Story
   const [storyEnabled, setStoryEnabled] = useState(false);
   const [storyHeadlineEn, setStoryHeadlineEn] = useState('');
@@ -102,6 +111,12 @@ export default function ProductEditPage() {
     setTaglineEn(data.tagline_en || '');
     setTaglineSq(data.tagline_sq || '');
     setFeaturedImageUrl(data.featured_image_url || '');
+    setHeroEnabled(data.hero_enabled || false);
+    setHeroMediaUrl(data.hero_media_url || '');
+    setHeroTitleEn(data.hero_title_en || '');
+    setHeroTitleSq(data.hero_title_sq || '');
+    setHeroSubtitleEn(data.hero_subtitle_en || '');
+    setHeroSubtitleSq(data.hero_subtitle_sq || '');
     setVariants(data.product_variants || []);
     setImages(data.product_images || []);
     setSpecs(data.product_specs || []);
@@ -186,6 +201,12 @@ export default function ProductEditPage() {
         is_featured: isFeatured,
         sort_order: sortOrder,
         featured_image_url: featuredImageUrl || null,
+        hero_enabled: heroEnabled,
+        hero_media_url: heroMediaUrl || null,
+        hero_title_en: heroTitleEn || null,
+        hero_title_sq: heroTitleSq || null,
+        hero_subtitle_en: heroSubtitleEn || null,
+        hero_subtitle_sq: heroSubtitleSq || null,
       };
 
       let productId = id;
@@ -656,6 +677,99 @@ export default function ProductEditPage() {
           </label>
         </div>
       </section>
+
+      {/* Product Hero */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Hero Section</h2>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={heroEnabled} onChange={(e) => setHeroEnabled(e.target.checked)} className="rounded" />
+            Enabled
+          </label>
+        </div>
+
+        {heroEnabled && (
+          <>
+            <p className="text-xs text-gray-400">Full-width hero banner shown above the product details. Supports image or video backgrounds.</p>
+
+            {/* Hero Media */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Background (Image or Video)</label>
+              {heroMediaUrl ? (
+                <div className="flex items-center gap-3">
+                  <div className="relative w-48 h-28 rounded overflow-hidden border border-gray-200">
+                    {heroMediaUrl.match(/\.(mp4|webm|mov)$/i) ? (
+                      <video src={heroMediaUrl} className="w-full h-full object-cover" muted />
+                    ) : (
+                      <img src={heroMediaUrl} alt="" className="w-full h-full object-cover" />
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <button onClick={() => setShowHeroMediaPicker(true)} className="text-xs text-gray-500 hover:text-black">Replace</button>
+                    <button onClick={() => setHeroMediaUrl('')} className="text-xs text-red-400 hover:text-red-600">Remove</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <label className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300 cursor-pointer">
+                    {isNew ? 'Save product first' : '+ Upload'}
+                    {!isNew && (
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const supabase = createAdminClient();
+                          const ext = file.name.split('.').pop();
+                          const path = `${id}/hero-bg-${Date.now()}.${ext}`;
+                          const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
+                          if (uploadError) { toast.error('Upload failed'); return; }
+                          const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
+                          setHeroMediaUrl(publicUrl);
+                          await supabase.from('media').insert({ url: publicUrl, filename: file.name, mime_type: file.type, size: file.size, alt_text: `${name} - hero` });
+                          toast.success('Hero media uploaded');
+                          e.target.value = '';
+                        }}
+                      />
+                    )}
+                  </label>
+                  {!isNew && (
+                    <button
+                      onClick={() => setShowHeroMediaPicker(true)}
+                      className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300"
+                    >
+                      From Library
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Hero Text */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Hero Title (EN)" value={heroTitleEn} onChange={setHeroTitleEn} />
+              <Field label="Hero Title (SQ)" value={heroTitleSq} onChange={setHeroTitleSq} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Hero Subtitle (EN)" value={heroSubtitleEn} onChange={setHeroSubtitleEn} />
+              <Field label="Hero Subtitle (SQ)" value={heroSubtitleSq} onChange={setHeroSubtitleSq} />
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* Hero Media Picker */}
+      <MediaPickerModal
+        open={showHeroMediaPicker}
+        onClose={() => setShowHeroMediaPicker(false)}
+        onSelect={(media: Media) => {
+          setHeroMediaUrl(media.url);
+          setShowHeroMediaPicker(false);
+          toast.success('Hero media set from library');
+        }}
+      />
 
       {/* Featured Image */}
       <section className={`bg-white rounded-xl border p-6 space-y-4 transition-all ${isFeatured ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-200'}`}>

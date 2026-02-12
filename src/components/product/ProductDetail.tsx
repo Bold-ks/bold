@@ -26,6 +26,14 @@ interface ProductDetailProps {
   tagline_en?: string | null;
   tagline_sq?: string | null;
   story?: ProductStory | null;
+  hero?: {
+    enabled: boolean;
+    media_url: string | null;
+    title_en: string | null;
+    title_sq: string | null;
+    subtitle_en: string | null;
+    subtitle_sq: string | null;
+  } | null;
 }
 
 function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: string }) {
@@ -64,7 +72,7 @@ function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: 
   return <>{icons[icon] || icons.star}</>;
 }
 
-export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq, story }: ProductDetailProps) {
+export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq, story, hero }: ProductDetailProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -126,6 +134,61 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
 
   return (
     <>
+      {/* Product Hero Banner */}
+      {hero && hero.enabled && hero.media_url && (
+        <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+          {/* Background */}
+          {hero.media_url.match(/\.(mp4|webm|mov)$/i) ? (
+            <video
+              src={hero.media_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <Image
+              src={hero.media_url}
+              alt=""
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+          )}
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/30" />
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {(() => {
+                const title = locale === 'sq' ? (hero.title_sq || hero.title_en) : (hero.title_en || hero.title_sq);
+                const subtitle = locale === 'sq' ? (hero.subtitle_sq || hero.subtitle_en) : (hero.subtitle_en || hero.subtitle_sq);
+                return (
+                  <>
+                    {title && (
+                      <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white tracking-tight mb-4">
+                        {title}
+                      </h1>
+                    )}
+                    {subtitle && (
+                      <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
+                        {subtitle}
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Hero: Image + Product Info */}
       <section className="bg-warm-50">
         <div className="max-w-7xl mx-auto">

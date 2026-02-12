@@ -18,7 +18,7 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product || product.brand !== brandSlug) notFound();
 
-  const { images, specs, variants, badges, tagline_en, tagline_sq, productId } = await getProductImagesAndSpecs(slug);
+  const { images, specs, variants, badges, tagline_en, tagline_sq, productId, hero } = await getProductImagesAndSpecs(slug);
   const story = productId ? await getProductStory(productId) : null;
 
   return (
@@ -31,6 +31,7 @@ export default async function ProductPage({ params }: Props) {
       tagline_en={tagline_en}
       tagline_sq={tagline_sq}
       story={story}
+      hero={hero}
     />
   );
 }
