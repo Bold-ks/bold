@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 
@@ -20,6 +20,7 @@ export function HeroSection() {
   const locale = useLocale();
   const [hero, setHero] = useState<HeroContent>({});
   const [loaded, setLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     async function loadHero() {
@@ -54,6 +55,14 @@ export function HeroSection() {
     loadHero();
   }, [locale]);
 
+  // Force autoplay on iOS Safari — it may pause despite attributes
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.play().catch(() => {});
+  }, [hero.mediaUrl]);
+
   const title = hero.title || t('heroTitle');
   const subtitle = hero.subtitle || t('heroSubtitle');
   const cta = hero.cta || t('exploreMore');
@@ -67,12 +76,16 @@ export function HeroSection() {
       {hasMedia ? (
         isVideo ? (
           <video
+            ref={videoRef}
             src={hero.mediaUrl}
             autoPlay
             loop
             muted
             playsInline
+            controls={false}
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ objectFit: 'cover' }}
           />
         ) : (
           <Image
