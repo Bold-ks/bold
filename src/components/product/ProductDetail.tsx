@@ -287,11 +287,11 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
             {variantThumbnails && variantThumbnails.length > 1 && (
               <>
               <div className="border-t border-warm-200" />
-              <div className="py-10 md:py-14">
-                <h2 className="text-sm font-medium mb-8">
+              <div className="py-6 md:py-8">
+                <h2 className="text-sm font-medium mb-4 text-center">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex items-end gap-6 md:gap-10 overflow-x-auto">
+                <div className="flex items-end justify-center gap-6 md:gap-10">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
