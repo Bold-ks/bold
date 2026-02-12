@@ -203,20 +203,17 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <p className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-3">
-                    {brandLabel}
-                  </p>
-                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight mb-2">
+                  <p className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-4">
                     {product.name}
-                  </h1>
+                  </p>
                   {(() => {
                     const tagline = locale === 'sq' ? tagline_sq : tagline_en;
                     const subtitle = tagline || product.category;
-                    return subtitle ? (
-                      <p className="text-warm-400 text-sm md:text-base mb-8 md:mb-10">
+                    return (
+                      <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight mb-8 md:mb-10">
                         {subtitle}
-                      </p>
-                    ) : null;
+                      </h1>
+                    );
                   })()}
 
                   {/* Colors with selected label */}
