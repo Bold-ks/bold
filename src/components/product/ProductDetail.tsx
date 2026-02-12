@@ -271,27 +271,27 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
         </div>
       </section>
 
-      {/* Popular Variants + Service Badges — gray band */}
+      {/* Popular Variants + Service Badges — one seamless section with dividers */}
       {((variantThumbnails && variantThumbnails.length > 1) || (badges && badges.length > 0)) && (
-        <section className="bg-warm-100">
-          <div className="max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-16 space-y-10">
+        <section className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 md:px-12">
             {/* Popular Variants */}
             {variantThumbnails && variantThumbnails.length > 1 && (
-              <div>
+              <div className="py-10 md:py-14">
                 <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
+                <div className="flex gap-4 md:gap-6 overflow-x-auto pb-2 -mx-1 px-1">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className={`relative w-28 h-28 md:w-36 md:h-36 rounded-lg overflow-hidden bg-white border-2 transition-all ${
+                      <div className={`relative w-28 h-28 md:w-36 md:h-36 overflow-hidden bg-warm-50 border-2 transition-all ${
                         v.index === selectedColorIndex
-                          ? 'border-black shadow-md'
-                          : 'border-warm-200 hover:border-warm-400'
+                          ? 'border-black'
+                          : 'border-transparent hover:border-warm-300'
                       }`}>
                         {v.thumbnail ? (
                           <Image
@@ -310,13 +310,32 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                       }`}>{v.color_name}</p>
                     </button>
                   ))}
+                  {/* Compose yours card */}
+                  <Link
+                    href="/contact"
+                    className="flex-shrink-0 group transition-all"
+                  >
+                    <div className="relative w-28 h-28 md:w-36 md:h-36 overflow-hidden bg-warm-50 border-2 border-transparent hover:border-warm-300 flex items-center justify-center transition-all">
+                      <svg className="w-6 h-6 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
+                      </svg>
+                    </div>
+                    <p className="text-xs mt-2 text-center text-warm-500 group-hover:text-black transition-colors">
+                      {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
+                    </p>
+                  </Link>
                 </div>
               </div>
             )}
 
+            {/* Thin divider */}
+            {variantThumbnails && variantThumbnails.length > 1 && badges && badges.length > 0 && (
+              <div className="border-t border-warm-200" />
+            )}
+
             {/* Service Badges */}
             {badges && badges.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-2">
+              <div className="py-8 md:py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
                 {badges.map((badge, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <div className="text-warm-400 flex-shrink-0">
