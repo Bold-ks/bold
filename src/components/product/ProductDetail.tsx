@@ -308,7 +308,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                           <div className="w-full h-full" />
                         )}
                       </div>
-                      <div className={`h-[3px] mt-3 transition-all ${
+                      <div className={`h-[1px] mt-3 transition-all ${
                         v.index === selectedColorIndex ? 'bg-black' : 'bg-transparent'
                       }`} />
                     </button>
