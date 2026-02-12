@@ -318,9 +318,14 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                       const variantPrice = colorVariants?.[selectedColorIndex]?.price;
                       const displayPrice = variantPrice || product.price;
                       return displayPrice ? (
-                        <p className="text-2xl md:text-3xl font-light">
-                          €{displayPrice.toLocaleString()}
-                        </p>
+                        <>
+                          <p className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-2">
+                            {locale === 'sq' ? 'Duke filluar nga' : 'Starting at'}
+                          </p>
+                          <p className="text-2xl md:text-3xl font-light">
+                            €{displayPrice.toLocaleString()}
+                          </p>
+                        </>
                       ) : (
                         <p className="text-base md:text-lg text-warm-500">
                           {t('product.contactForPrice')}
