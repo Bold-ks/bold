@@ -121,8 +121,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-warm-800 mt-10 md:mt-12 pt-6 md:pt-8 text-center">
+        <div className="border-t border-warm-800 mt-10 md:mt-12 pt-6 md:pt-8 text-center space-y-2">
           <p className="text-xs text-warm-500">&copy; {new Date().getFullYear()} Bold. All rights reserved.</p>
+          <p className="text-[10px] text-warm-600">
+            Designed & developed by{' '}
+            <a href="https://www.helixdev.co" target="_blank" rel="noopener noreferrer" className="text-warm-400 hover:text-white transition-colors">
+              Helix Dev
+            </a>
+          </p>
         </div>
       </div>
     </footer>
