@@ -285,31 +285,33 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
           <div className="max-w-7xl mx-auto px-4 md:px-12">
             {/* Popular Variants */}
             {variantThumbnails && variantThumbnails.length > 1 && (
+              <>
+              <div className="border-t border-warm-200" />
               <div className="py-10 md:py-14">
-                <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6 text-center">
+                <h2 className="text-sm font-medium mb-8">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex gap-3 md:gap-4 justify-center flex-wrap">
+                <div className="flex items-end gap-6 md:gap-10 overflow-x-auto">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className="relative w-24 h-24 md:w-28 md:h-28 overflow-hidden bg-white">
+                      <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden">
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
                             alt={v.color_name}
                             fill
-                            className="object-contain p-2"
-                            sizes="112px"
+                            className="object-contain"
+                            sizes="96px"
                           />
                         ) : (
-                          <div className="w-full h-full bg-white" />
+                          <div className="w-full h-full" />
                         )}
                       </div>
-                      <div className={`h-0.5 mt-2 transition-all ${
+                      <div className={`h-[3px] mt-3 transition-all ${
                         v.index === selectedColorIndex ? 'bg-black' : 'bg-transparent'
                       }`} />
                     </button>
@@ -319,18 +321,18 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     href="/contact"
                     className="flex-shrink-0 group transition-all"
                   >
-                    <div className="relative w-24 h-24 md:w-28 md:h-28 overflow-hidden bg-white flex flex-col items-center justify-center gap-1.5">
-                      <svg className="w-4 h-4 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="relative w-20 h-20 md:w-24 md:h-24 border border-warm-200 flex flex-col items-center justify-center gap-1.5">
+                      <svg className="w-4 h-4 text-warm-500 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                       </svg>
-                      <span className="text-[11px] text-warm-400 group-hover:text-black transition-colors">
-                        {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
-                      </span>
                     </div>
-                    <div className="h-0.5 mt-2 bg-transparent" />
+                    <p className="text-[11px] text-warm-500 group-hover:text-black mt-1.5 text-center transition-colors">
+                      {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
+                    </p>
                   </Link>
                 </div>
               </div>
+              </>
             )}
 
             {/* Thin divider */}
