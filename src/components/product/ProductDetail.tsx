@@ -160,26 +160,27 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/30" />
           {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <div className="absolute inset-0 flex flex-col items-end justify-center text-left px-8 md:px-16 lg:px-24">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="max-w-xl"
             >
               {(() => {
                 const title = locale === 'sq' ? (hero.title_sq || hero.title_en) : (hero.title_en || hero.title_sq);
                 const subtitle = locale === 'sq' ? (hero.subtitle_sq || hero.subtitle_en) : (hero.subtitle_en || hero.subtitle_sq);
                 return (
                   <>
-                    {title && (
-                      <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white tracking-tight mb-4">
-                        {title}
-                      </h1>
-                    )}
                     {subtitle && (
-                      <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">
+                      <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-white/70 mb-4">
                         {subtitle}
                       </p>
+                    )}
+                    {title && (
+                      <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
+                        {title}
+                      </h1>
                     )}
                   </>
                 );
