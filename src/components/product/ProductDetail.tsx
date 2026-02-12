@@ -140,14 +140,18 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
         <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
           {/* Background */}
           {hero.media_url.match(/\.(mp4|webm|mov)$/i) ? (
-            <video
-              src={hero.media_url}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            />
+            <>
+              <video
+                src={hero.media_url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                className="bg-video absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 z-[1]" />
+            </>
           ) : (
             <Image
               src={hero.media_url}

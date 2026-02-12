@@ -53,14 +53,18 @@ export function AboutHero() {
     <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
       {hasMedia ? (
         isVideo ? (
-          <video
-            src={hero.mediaUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <>
+            <video
+              src={hero.mediaUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={false}
+              className="bg-video absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 z-[1]" />
+          </>
         ) : (
           <Image
             src={hero.mediaUrl!}

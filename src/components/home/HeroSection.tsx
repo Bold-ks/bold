@@ -75,18 +75,20 @@ export function HeroSection() {
       {/* Background */}
       {hasMedia ? (
         isVideo ? (
-          <video
-            ref={videoRef}
-            src={hero.mediaUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            style={{ objectFit: 'cover' }}
-          />
+          <>
+            <video
+              ref={videoRef}
+              src={hero.mediaUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={false}
+              preload="metadata"
+              className="bg-video absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 z-[1]" />
+          </>
         ) : (
           <Image
             src={hero.mediaUrl!}
