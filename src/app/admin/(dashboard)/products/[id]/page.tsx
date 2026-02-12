@@ -295,6 +295,7 @@ export default function ProductEditPage() {
       // Save Product Story
       if (storyEnabled || storyBlocks.length > 0) {
         let currentStoryId = storyId;
+        // Upsert: try update first, if no rows affected, insert
         if (currentStoryId) {
           await supabase.from('product_stories').update({
             headline_en: storyHeadlineEn || null,
@@ -302,14 +303,25 @@ export default function ProductEditPage() {
             enabled: storyEnabled,
           }).eq('id', currentStoryId);
         } else {
-          const { data: newStory, error: storyErr } = await supabase.from('product_stories').insert({
-            product_id: productId,
-            headline_en: storyHeadlineEn || null,
-            headline_sq: storyHeadlineSq || null,
-            enabled: storyEnabled,
-          }).select('id').single();
-          if (storyErr) throw storyErr;
-          currentStoryId = newStory.id;
+          // Check if one already exists (edge case: state lost)
+          const { data: existing } = await supabase.from('product_stories').select('id').eq('product_id', productId).single();
+          if (existing) {
+            currentStoryId = existing.id;
+            await supabase.from('product_stories').update({
+              headline_en: storyHeadlineEn || null,
+              headline_sq: storyHeadlineSq || null,
+              enabled: storyEnabled,
+            }).eq('id', currentStoryId);
+          } else {
+            const { data: newStory, error: storyErr } = await supabase.from('product_stories').insert({
+              product_id: productId,
+              headline_en: storyHeadlineEn || null,
+              headline_sq: storyHeadlineSq || null,
+              enabled: storyEnabled,
+            }).select('id').single();
+            if (storyErr) throw storyErr;
+            currentStoryId = newStory.id;
+          }
           setStoryId(currentStoryId);
         }
 
