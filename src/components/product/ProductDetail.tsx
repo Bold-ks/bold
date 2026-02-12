@@ -286,26 +286,28 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
-                      className={`flex-shrink-0 group transition-all ${
-                        v.index === selectedColorIndex ? 'opacity-100' : 'opacity-60 hover:opacity-90'
-                      }`}
+                      className="flex-shrink-0 group transition-all"
                     >
-                      <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden mb-2 border-2 transition-colors ${
-                        v.index === selectedColorIndex ? 'border-black' : 'border-transparent'
+                      <div className={`relative w-28 h-28 md:w-36 md:h-36 rounded-lg overflow-hidden bg-white border-2 transition-all ${
+                        v.index === selectedColorIndex
+                          ? 'border-black shadow-md'
+                          : 'border-warm-200 hover:border-warm-400'
                       }`}>
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
                             alt={v.color_name}
                             fill
-                            className="object-cover"
-                            sizes="128px"
+                            className="object-contain p-2"
+                            sizes="144px"
                           />
                         ) : (
-                          <div className="w-full h-full bg-warm-200" />
+                          <div className="w-full h-full bg-warm-50" />
                         )}
                       </div>
-                      <p className="text-xs text-warm-600 text-center">{v.color_name}</p>
+                      <p className={`text-xs mt-2 text-center transition-colors ${
+                        v.index === selectedColorIndex ? 'text-black font-medium' : 'text-warm-500'
+                      }`}>{v.color_name}</p>
                     </button>
                   ))}
                 </div>
