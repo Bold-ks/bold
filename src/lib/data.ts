@@ -76,6 +76,7 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
   badges: { icon: string; text_en: string; text_sq: string; sort_order: number }[];
   tagline_en: string | null;
   tagline_sq: string | null;
+  productId: string | null;
 }> {
   if (isSupabaseConfigured) {
     try {
@@ -120,13 +121,67 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
           }));
         const tagline_en = (product as unknown as Record<string, unknown>).tagline_en as string | null;
         const tagline_sq = (product as unknown as Record<string, unknown>).tagline_sq as string | null;
-        return { images, specs, variants, badges, tagline_en, tagline_sq };
+        const productId = (product as unknown as Record<string, unknown>).id as string;
+        return { images, specs, variants, badges, tagline_en, tagline_sq, productId };
       }
     } catch (e) {
       console.error('Failed to get images/specs from Supabase:', e);
     }
   }
-  return { images: [], specs: [], variants: [], badges: [], tagline_en: null, tagline_sq: null };
+  return { images: [], specs: [], variants: [], badges: [], tagline_en: null, tagline_sq: null, productId: null };
+}
+
+export interface StoryBlock {
+  id: string;
+  image_url: string | null;
+  title_en: string | null;
+  title_sq: string | null;
+  description_en: string | null;
+  description_sq: string | null;
+  link_url: string | null;
+  sort_order: number;
+}
+
+export interface ProductStory {
+  id: string;
+  headline_en: string | null;
+  headline_sq: string | null;
+  enabled: boolean;
+  blocks: StoryBlock[];
+}
+
+export async function getProductStory(productId: string): Promise<ProductStory | null> {
+  if (!isSupabaseConfigured) return null;
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data: story } = await supabase
+      .from('product_stories')
+      .select('*')
+      .eq('product_id', productId)
+      .single();
+    if (!story || !story.enabled) return null;
+
+    const { data: blocks } = await supabase
+      .from('product_story_blocks')
+      .select('*')
+      .eq('story_id', story.id)
+      .order('sort_order');
+
+    return {
+      id: story.id,
+      headline_en: story.headline_en,
+      headline_sq: story.headline_sq,
+      enabled: story.enabled,
+      blocks: (blocks || []) as StoryBlock[],
+    };
+  } catch (e) {
+    console.error('Failed to get product story:', e);
+    return null;
+  }
 }
 
 // Map Supabase product to static product shape for backwards compatibility

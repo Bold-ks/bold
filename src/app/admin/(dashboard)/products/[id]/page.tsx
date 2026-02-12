@@ -52,6 +52,22 @@ export default function ProductEditPage() {
   const [specs, setSpecs] = useState<Partial<ProductSpec>[]>([]);
   const [badges, setBadges] = useState<Partial<ProductBadge>[]>([]);
 
+  // Product Story
+  const [storyEnabled, setStoryEnabled] = useState(false);
+  const [storyHeadlineEn, setStoryHeadlineEn] = useState('');
+  const [storyHeadlineSq, setStoryHeadlineSq] = useState('');
+  const [storyId, setStoryId] = useState<string | null>(null);
+  const [storyBlocks, setStoryBlocks] = useState<{
+    id?: string;
+    image_url: string;
+    title_en: string;
+    title_sq: string;
+    description_en: string;
+    description_sq: string;
+    link_url: string;
+  }[]>([]);
+  const [storyMediaPickerIndex, setStoryMediaPickerIndex] = useState<number | null>(null);
+
   // Brand categories for dropdowns
   const [brandCategories, setBrandCategories] = useState<{ id: string; brand: string; category_en: string; category_sq: string; subcategory_en: string | null; subcategory_sq: string | null }[]>([]);
 
@@ -91,6 +107,34 @@ export default function ProductEditPage() {
     setSpecs(data.product_specs || []);
     setBadges((data.product_badges || []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order));
     setSlugManuallyEdited(true); // Don't auto-generate for existing products
+
+    // Load story
+    const { data: storyData } = await supabase
+      .from('product_stories')
+      .select('*')
+      .eq('product_id', id)
+      .single();
+    if (storyData) {
+      setStoryId(storyData.id);
+      setStoryEnabled(storyData.enabled);
+      setStoryHeadlineEn(storyData.headline_en || '');
+      setStoryHeadlineSq(storyData.headline_sq || '');
+      const { data: blocksData } = await supabase
+        .from('product_story_blocks')
+        .select('*')
+        .eq('story_id', storyData.id)
+        .order('sort_order');
+      setStoryBlocks((blocksData || []).map((b: Record<string, unknown>) => ({
+        id: b.id as string,
+        image_url: (b.image_url as string) || '',
+        title_en: (b.title_en as string) || '',
+        title_sq: (b.title_sq as string) || '',
+        description_en: (b.description_en as string) || '',
+        description_sq: (b.description_sq as string) || '',
+        link_url: (b.link_url as string) || '',
+      })));
+    }
+
     setLoading(false);
   }, [id, isNew, router]);
 
@@ -225,6 +269,46 @@ export default function ProductEditPage() {
           }))
         );
         if (badgeError) throw badgeError;
+      }
+
+      // Save Product Story
+      if (storyEnabled || storyBlocks.length > 0) {
+        let currentStoryId = storyId;
+        if (currentStoryId) {
+          await supabase.from('product_stories').update({
+            headline_en: storyHeadlineEn || null,
+            headline_sq: storyHeadlineSq || null,
+            enabled: storyEnabled,
+          }).eq('id', currentStoryId);
+        } else {
+          const { data: newStory, error: storyErr } = await supabase.from('product_stories').insert({
+            product_id: productId,
+            headline_en: storyHeadlineEn || null,
+            headline_sq: storyHeadlineSq || null,
+            enabled: storyEnabled,
+          }).select('id').single();
+          if (storyErr) throw storyErr;
+          currentStoryId = newStory.id;
+          setStoryId(currentStoryId);
+        }
+
+        // Delete existing blocks and re-insert
+        await supabase.from('product_story_blocks').delete().eq('story_id', currentStoryId);
+        if (storyBlocks.length > 0) {
+          const { error: blocksErr } = await supabase.from('product_story_blocks').insert(
+            storyBlocks.map((b, i) => ({
+              story_id: currentStoryId,
+              image_url: b.image_url || null,
+              title_en: b.title_en || null,
+              title_sq: b.title_sq || null,
+              description_en: b.description_en || null,
+              description_sq: b.description_sq || null,
+              link_url: b.link_url || null,
+              sort_order: i,
+            }))
+          );
+          if (blocksErr) throw blocksErr;
+        }
       }
 
       toast.success(isNew ? 'Product created' : 'Product saved');
@@ -965,6 +1049,206 @@ export default function ProductEditPage() {
           </div>
         ))}
       </section>
+
+      {/* Product Story */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Product Story</h2>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={storyEnabled} onChange={(e) => setStoryEnabled(e.target.checked)} className="rounded" />
+            Enabled
+          </label>
+        </div>
+
+        {storyEnabled && (
+          <>
+            <p className="text-xs text-gray-400">Editorial section with lifestyle images and text blocks. Appears between Product Band and Tech Specs.</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Headline (EN)" value={storyHeadlineEn} onChange={setStoryHeadlineEn} />
+              <Field label="Headline (SQ)" value={storyHeadlineSq} onChange={setStoryHeadlineSq} />
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <h3 className="text-sm font-medium text-gray-600">Story Blocks</h3>
+              <button
+                onClick={() => setStoryBlocks([...storyBlocks, { image_url: '', title_en: '', title_sq: '', description_en: '', description_sq: '', link_url: '' }])}
+                className="text-sm text-black hover:underline"
+              >
+                + Add Block
+              </button>
+            </div>
+
+            {storyBlocks.length === 0 && <p className="text-sm text-gray-400">No story blocks yet. Add blocks to create an editorial section.</p>}
+
+            {storyBlocks.map((block, i) => (
+              <div key={i} className="border border-gray-100 rounded-lg p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-400 font-medium">Block {i + 1} — {i % 2 === 0 ? 'Image Left' : 'Image Right'}</span>
+                  <div className="flex gap-2">
+                    {i > 0 && (
+                      <button
+                        onClick={() => {
+                          const updated = [...storyBlocks];
+                          [updated[i - 1], updated[i]] = [updated[i], updated[i - 1]];
+                          setStoryBlocks(updated);
+                        }}
+                        className="text-xs text-gray-400 hover:text-black"
+                      >↑</button>
+                    )}
+                    {i < storyBlocks.length - 1 && (
+                      <button
+                        onClick={() => {
+                          const updated = [...storyBlocks];
+                          [updated[i], updated[i + 1]] = [updated[i + 1], updated[i]];
+                          setStoryBlocks(updated);
+                        }}
+                        className="text-xs text-gray-400 hover:text-black"
+                      >↓</button>
+                    )}
+                    <button
+                      onClick={() => setStoryBlocks(storyBlocks.filter((_, j) => j !== i))}
+                      className="text-red-400 hover:text-red-600 text-sm"
+                    >✕</button>
+                  </div>
+                </div>
+
+                {/* Image */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                  {block.image_url ? (
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-24 h-24 rounded overflow-hidden border border-gray-200">
+                        <img src={block.image_url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <button onClick={() => setStoryMediaPickerIndex(i)} className="text-xs text-gray-500 hover:text-black">Replace</button>
+                        <button onClick={() => {
+                          const updated = [...storyBlocks];
+                          updated[i] = { ...updated[i], image_url: '' };
+                          setStoryBlocks(updated);
+                        }} className="text-xs text-red-400 hover:text-red-600">Remove</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      <label className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300 cursor-pointer">
+                        + Upload
+                        {!isNew && (
+                          <input
+                            type="file"
+                            accept="image/*,video/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              const supabase = createAdminClient();
+                              const ext = file.name.split('.').pop();
+                              const path = `${id}/story/${Date.now()}.${ext}`;
+                              const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
+                              if (uploadError) { toast.error('Upload failed'); return; }
+                              const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
+                              const updated = [...storyBlocks];
+                              updated[i] = { ...updated[i], image_url: publicUrl };
+                              setStoryBlocks(updated);
+                              await supabase.from('media').insert({ url: publicUrl, filename: file.name, mime_type: file.type, size: file.size, alt_text: `${name} - story` });
+                              toast.success('Image uploaded');
+                              e.target.value = '';
+                            }}
+                          />
+                        )}
+                      </label>
+                      <button
+                        onClick={() => setStoryMediaPickerIndex(i)}
+                        className="border-2 border-dashed border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300"
+                      >
+                        From Library
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Title */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    value={block.title_en}
+                    onChange={(e) => {
+                      const updated = [...storyBlocks];
+                      updated[i] = { ...updated[i], title_en: e.target.value };
+                      setStoryBlocks(updated);
+                    }}
+                    placeholder="Title (EN)"
+                    className="input-field"
+                  />
+                  <input
+                    value={block.title_sq}
+                    onChange={(e) => {
+                      const updated = [...storyBlocks];
+                      updated[i] = { ...updated[i], title_sq: e.target.value };
+                      setStoryBlocks(updated);
+                    }}
+                    placeholder="Title (SQ)"
+                    className="input-field"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <textarea
+                    value={block.description_en}
+                    onChange={(e) => {
+                      const updated = [...storyBlocks];
+                      updated[i] = { ...updated[i], description_en: e.target.value };
+                      setStoryBlocks(updated);
+                    }}
+                    placeholder="Description (EN)"
+                    rows={2}
+                    className="input-field"
+                  />
+                  <textarea
+                    value={block.description_sq}
+                    onChange={(e) => {
+                      const updated = [...storyBlocks];
+                      updated[i] = { ...updated[i], description_sq: e.target.value };
+                      setStoryBlocks(updated);
+                    }}
+                    placeholder="Description (SQ)"
+                    rows={2}
+                    className="input-field"
+                  />
+                </div>
+
+                {/* Link */}
+                <input
+                  value={block.link_url}
+                  onChange={(e) => {
+                    const updated = [...storyBlocks];
+                    updated[i] = { ...updated[i], link_url: e.target.value };
+                    setStoryBlocks(updated);
+                  }}
+                  placeholder="Read more link (optional)"
+                  className="input-field"
+                />
+              </div>
+            ))}
+          </>
+        )}
+      </section>
+
+      {/* Story Media Picker */}
+      <MediaPickerModal
+        open={storyMediaPickerIndex !== null}
+        onClose={() => setStoryMediaPickerIndex(null)}
+        onSelect={(media: Media) => {
+          if (storyMediaPickerIndex !== null) {
+            const updated = [...storyBlocks];
+            updated[storyMediaPickerIndex] = { ...updated[storyMediaPickerIndex], image_url: media.url };
+            setStoryBlocks(updated);
+            setStoryMediaPickerIndex(null);
+            toast.success('Image set from library');
+          }
+        }}
+      />
 
       {/* Actions */}
       <div className="flex items-center justify-between">

@@ -8,6 +8,7 @@ import { Product } from '@/data/types';
 import { PlaceholderImage } from '@/components/ui/PlaceholderImage';
 import { ColorPicker } from '@/components/ui/ColorPicker';
 import Image from 'next/image';
+import type { ProductStory } from '@/lib/data';
 
 interface Badge {
   icon: string;
@@ -24,6 +25,7 @@ interface ProductDetailProps {
   badges?: Badge[];
   tagline_en?: string | null;
   tagline_sq?: string | null;
+  story?: ProductStory | null;
 }
 
 function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: string }) {
@@ -62,7 +64,7 @@ function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: 
   return <>{icons[icon] || icons.star}</>;
 }
 
-export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq }: ProductDetailProps) {
+export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq, story }: ProductDetailProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -352,6 +354,79 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 ))}
               </div>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* Product Story */}
+      {story && story.enabled && story.blocks.length > 0 && (
+        <section className="py-16 md:py-28">
+          <div className="max-w-7xl mx-auto px-4 md:px-12">
+            {/* Headline */}
+            {(story.headline_en || story.headline_sq) && (
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-light text-center max-w-3xl mx-auto mb-16 md:mb-24 leading-snug">
+                {locale === 'sq' ? (story.headline_sq || story.headline_en) : (story.headline_en || story.headline_sq)}
+              </h2>
+            )}
+
+            {/* Story Blocks */}
+            <div className="space-y-16 md:space-y-28">
+              {story.blocks.map((block, i) => {
+                const isImageLeft = i % 2 === 0;
+                const title = locale === 'sq' ? (block.title_sq || block.title_en) : (block.title_en || block.title_sq);
+                const desc = locale === 'sq' ? (block.description_sq || block.description_en) : (block.description_en || block.description_sq);
+
+                return (
+                  <div
+                    key={block.id}
+                    className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center ${
+                      !isImageLeft ? 'lg:direction-rtl' : ''
+                    }`}
+                  >
+                    {/* Image */}
+                    <div className={`${!isImageLeft ? 'lg:order-2' : ''}`}>
+                      {block.image_url ? (
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          <Image
+                            src={block.image_url}
+                            alt={title || ''}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-[4/5] bg-warm-100" />
+                      )}
+                    </div>
+
+                    {/* Text */}
+                    <div className={`${!isImageLeft ? 'lg:order-1' : ''} flex items-center`}>
+                      <div className="max-w-md">
+                        {title && (
+                          <h3 className="text-xl md:text-2xl font-medium mb-4">
+                            {title}
+                          </h3>
+                        )}
+                        {desc && (
+                          <p className="text-warm-600 leading-relaxed mb-4 text-sm md:text-base">
+                            {desc}
+                          </p>
+                        )}
+                        {block.link_url && (
+                          <a
+                            href={block.link_url}
+                            className="text-sm text-black underline underline-offset-4 hover:text-warm-600 transition-colors"
+                          >
+                            {locale === 'sq' ? 'Lexo më shumë' : 'Read more'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
       )}
