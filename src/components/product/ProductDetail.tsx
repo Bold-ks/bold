@@ -286,24 +286,24 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
             {/* Popular Variants */}
             {variantThumbnails && variantThumbnails.length > 1 && (
               <div className="py-10 md:py-14">
-                <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6">
+                <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6 text-center">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex gap-3 md:gap-5 overflow-x-auto pb-2 -mx-1 px-1">
+                <div className="flex gap-3 md:gap-4 justify-center flex-wrap">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-white">
+                      <div className="relative w-24 h-24 md:w-28 md:h-28 overflow-hidden bg-white">
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
                             alt={v.color_name}
                             fill
-                            className="object-contain p-3"
-                            sizes="160px"
+                            className="object-contain p-2"
+                            sizes="112px"
                           />
                         ) : (
                           <div className="w-full h-full bg-white" />
@@ -319,11 +319,11 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     href="/contact"
                     className="flex-shrink-0 group transition-all"
                   >
-                    <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-white flex flex-col items-center justify-center gap-2">
-                      <svg className="w-5 h-5 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="relative w-24 h-24 md:w-28 md:h-28 overflow-hidden bg-white flex flex-col items-center justify-center gap-1.5">
+                      <svg className="w-4 h-4 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                       </svg>
-                      <span className="text-xs text-warm-400 group-hover:text-black transition-colors">
+                      <span className="text-[11px] text-warm-400 group-hover:text-black transition-colors">
                         {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
                       </span>
                     </div>
