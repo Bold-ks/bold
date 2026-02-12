@@ -19,9 +19,9 @@ export function ProductCard({ product }: { product: Product }) {
         className="group cursor-pointer"
       >
         <div className="relative aspect-square mb-4 overflow-hidden bg-warm-50">
-          {product.heroImage ? (
+          {(product.featuredImage || product.heroImage) ? (
             <Image
-              src={product.heroImage}
+              src={product.featuredImage || product.heroImage!}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"

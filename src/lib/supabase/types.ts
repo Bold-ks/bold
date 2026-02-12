@@ -20,6 +20,7 @@ export interface Database {
           is_featured: boolean;
           sort_order: number;
           created_at: string;
+          featured_image_url: string | null;
           updated_at: string;
         };
         Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at'> & {

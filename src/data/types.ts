@@ -21,6 +21,7 @@ export interface Product {
   specs: Record<string, string>;
   featured?: boolean;
   heroImage?: string;
+  featuredImage?: string;
 }
 
 export interface BrandInfo {

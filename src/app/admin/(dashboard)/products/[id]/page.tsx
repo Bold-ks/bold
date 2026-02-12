@@ -41,6 +41,8 @@ export default function ProductEditPage() {
   const [isContactOnly, setIsContactOnly] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
+  const [featuredImageUrl, setFeaturedImageUrl] = useState('');
+  const [showFeaturedMediaPicker, setShowFeaturedMediaPicker] = useState(false);
 
   // Relations
   const [variants, setVariants] = useState<Partial<ProductVariant>[]>([]);
@@ -79,6 +81,7 @@ export default function ProductEditPage() {
     setIsContactOnly(data.is_contact_only);
     setIsFeatured(data.is_featured);
     setSortOrder(data.sort_order);
+    setFeaturedImageUrl(data.featured_image_url || '');
     setVariants(data.product_variants || []);
     setImages(data.product_images || []);
     setSpecs(data.product_specs || []);
@@ -132,6 +135,7 @@ export default function ProductEditPage() {
         is_contact_only: isContactOnly,
         is_featured: isFeatured,
         sort_order: sortOrder,
+        featured_image_url: featuredImageUrl || null,
       };
 
       let productId = id;
@@ -552,6 +556,95 @@ export default function ProductEditPage() {
           </label>
         </div>
       </section>
+
+      {/* Featured Image */}
+      <section className={`bg-white rounded-xl border p-6 space-y-4 transition-all ${isFeatured ? 'border-amber-300 ring-1 ring-amber-200' : 'border-gray-200'}`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">Featured Image</h2>
+            {isFeatured && (
+              <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Featured</span>
+            )}
+          </div>
+          {!isFeatured && (
+            <p className="text-xs text-gray-400">Mark product as Featured to use this</p>
+          )}
+        </div>
+
+        <p className="text-xs text-gray-400">
+          Optional image shown when this product appears on the homepage. Falls back to hero image if not set.
+        </p>
+
+        {featuredImageUrl ? (
+          <div className="relative group w-full max-w-xs">
+            <div className="relative aspect-square rounded-lg overflow-hidden border border-gray-200">
+              <img src={featuredImageUrl} alt="Featured" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => setShowFeaturedMediaPicker(true)}
+                className="text-xs text-gray-500 hover:text-black"
+              >
+                Replace
+              </button>
+              <button
+                onClick={() => setFeaturedImageUrl('')}
+                className="text-xs text-red-400 hover:text-red-600"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-3">
+            <label className={`border-2 border-dashed rounded-lg px-6 py-4 text-sm text-center ${
+              isNew ? 'border-gray-100 text-gray-300' : 'border-gray-200 text-gray-400 hover:text-gray-600 hover:border-gray-300 cursor-pointer'
+            }`}>
+              {isNew ? 'Save product first' : '+ Upload'}
+              {!isNew && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (file.size > 100 * 1024 * 1024) { toast.error('File too large (max 100MB)'); return; }
+                    const supabase = createAdminClient();
+                    const ext = file.name.split('.').pop();
+                    const path = `${id}/featured-${Date.now()}.${ext}`;
+                    const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
+                    if (uploadError) { toast.error('Upload failed'); return; }
+                    const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(path);
+                    setFeaturedImageUrl(publicUrl);
+                    await supabase.from('media').insert({ url: publicUrl, filename: file.name, mime_type: file.type, size: file.size, alt_text: `${name} - featured` });
+                    toast.success('Featured image uploaded');
+                    e.target.value = '';
+                  }}
+                />
+              )}
+            </label>
+            {!isNew && (
+              <button
+                onClick={() => setShowFeaturedMediaPicker(true)}
+                className="border-2 border-dashed border-gray-200 rounded-lg px-6 py-4 text-sm text-gray-400 hover:text-gray-600 hover:border-gray-300"
+              >
+                📷 From Library
+              </button>
+            )}
+          </div>
+        )}
+      </section>
+
+      <MediaPickerModal
+        open={showFeaturedMediaPicker}
+        onClose={() => setShowFeaturedMediaPicker(false)}
+        onSelect={(media: Media) => {
+          setFeaturedImageUrl(media.url);
+          setShowFeaturedMediaPicker(false);
+          toast.success('Featured image set from library');
+        }}
+      />
 
       {/* Variants */}
       <section className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
