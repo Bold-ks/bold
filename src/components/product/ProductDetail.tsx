@@ -210,7 +210,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     const tagline = locale === 'sq' ? tagline_sq : tagline_en;
                     const subtitle = tagline || product.category;
                     return (
-                      <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight mb-8 md:mb-10">
+                      <h1 className="text-2xl md:text-4xl lg:text-5xl font-light tracking-tight mb-8 md:mb-10">
                         {subtitle}
                       </h1>
                     );
