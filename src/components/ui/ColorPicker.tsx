@@ -22,7 +22,7 @@ export function ColorPicker({ colors, selectedIndex, onSelect }: ColorPickerProp
           onClick={() => handleSelect(i)}
           title={color.name}
           className={`w-8 h-8 rounded-full border-2 transition-all ${
-            selected === i ? 'border-white scale-110 ring-2 ring-black' : 'border-warm-200'
+            selected === i ? 'border-white scale-110 ring-2 ring-white' : 'border-warm-200'
           }`}
           style={{ backgroundColor: color.hex }}
         />
