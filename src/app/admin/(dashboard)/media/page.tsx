@@ -65,6 +65,28 @@ export default function MediaPage() {
       }
     }
 
+    // Check product_story_blocks image_url
+    const { data: storyData } = await supabase
+      .from('product_story_blocks')
+      .select('image_url')
+      .not('image_url', 'is', null);
+    if (storyData) {
+      for (const row of storyData as { image_url: string | null }[]) {
+        if (row.image_url) urls.add(row.image_url);
+      }
+    }
+
+    // Check products hero_media_url and featured_image_url
+    const { data: prodData } = await supabase
+      .from('products')
+      .select('hero_media_url, featured_image_url');
+    if (prodData) {
+      for (const row of prodData as { hero_media_url: string | null; featured_image_url: string | null }[]) {
+        if (row.hero_media_url) urls.add(row.hero_media_url);
+        if (row.featured_image_url) urls.add(row.featured_image_url);
+      }
+    }
+
     setUsedUrls(urls);
   }
 
