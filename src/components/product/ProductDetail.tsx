@@ -146,7 +146,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
               muted
               loop
               playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             />
           ) : (
             <Image
@@ -161,13 +161,13 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/30" />
           {/* Content */}
-          <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 px-8 md:px-16 lg:px-24">
+          <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 px-6 md:px-16 lg:px-24">
             <div className="hidden md:block" />
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex flex-col justify-center text-left"
+              className="flex flex-col justify-end pb-16 md:justify-center md:pb-0 text-left"
             >
               {(() => {
                 const title = locale === 'sq' ? (hero.title_sq || hero.title_en) : (hero.title_en || hero.title_sq);

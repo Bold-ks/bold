@@ -23,4 +23,13 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-light tracking-tight;
   }
+
+  /* Hide native video play button on iOS Safari */
+  video::-webkit-media-controls-panel,
+  video::-webkit-media-controls-play-button,
+  video::-webkit-media-controls-start-playback-button,
+  video::-webkit-media-controls {
+    display: none !important;
+    -webkit-appearance: none;
+  }
 }
