@@ -271,61 +271,62 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
         </div>
       </section>
 
-      {/* Popular Variants */}
-      {variantThumbnails && variantThumbnails.length > 1 && (
-        <section className="py-12 md:py-16 border-t border-warm-100">
-          <div className="max-w-7xl mx-auto px-4 md:px-12">
-            <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6">
-              {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
-            </h2>
-            <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
-              {variantThumbnails.map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => setSelectedColorIndex(v.index)}
-                  className={`flex-shrink-0 group transition-all ${
-                    v.index === selectedColorIndex ? 'opacity-100' : 'opacity-60 hover:opacity-90'
-                  }`}
-                >
-                  <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden mb-2 border-2 transition-colors ${
-                    v.index === selectedColorIndex ? 'border-black' : 'border-transparent'
-                  }`}>
-                    {v.thumbnail ? (
-                      <Image
-                        src={v.thumbnail}
-                        alt={v.color_name}
-                        fill
-                        className="object-cover"
-                        sizes="128px"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-warm-100" />
-                    )}
-                  </div>
-                  <p className="text-xs text-warm-600 text-center">{v.color_name}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Service Badges */}
-      {badges && badges.length > 0 && (
-        <section className="py-10 md:py-14 border-t border-warm-100 bg-white">
-          <div className="max-w-5xl mx-auto px-4 md:px-12">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
-              {badges.map((badge, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="text-warm-400 flex-shrink-0">
-                    <BadgeIcon icon={badge.icon} className="w-6 h-6" />
-                  </div>
-                  <span className="text-sm text-warm-700 tracking-wide">
-                    {locale === 'sq' ? badge.text_sq : badge.text_en}
-                  </span>
+      {/* Popular Variants + Service Badges — gray band */}
+      {((variantThumbnails && variantThumbnails.length > 1) || (badges && badges.length > 0)) && (
+        <section className="bg-warm-100">
+          <div className="max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-16 space-y-10">
+            {/* Popular Variants */}
+            {variantThumbnails && variantThumbnails.length > 1 && (
+              <div>
+                <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6">
+                  {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
+                </h2>
+                <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
+                  {variantThumbnails.map((v) => (
+                    <button
+                      key={v.id}
+                      onClick={() => setSelectedColorIndex(v.index)}
+                      className={`flex-shrink-0 group transition-all ${
+                        v.index === selectedColorIndex ? 'opacity-100' : 'opacity-60 hover:opacity-90'
+                      }`}
+                    >
+                      <div className={`relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden mb-2 border-2 transition-colors ${
+                        v.index === selectedColorIndex ? 'border-black' : 'border-transparent'
+                      }`}>
+                        {v.thumbnail ? (
+                          <Image
+                            src={v.thumbnail}
+                            alt={v.color_name}
+                            fill
+                            className="object-cover"
+                            sizes="128px"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-warm-200" />
+                        )}
+                      </div>
+                      <p className="text-xs text-warm-600 text-center">{v.color_name}</p>
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Service Badges */}
+            {badges && badges.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-2">
+                {badges.map((badge, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="text-warm-400 flex-shrink-0">
+                      <BadgeIcon icon={badge.icon} className="w-6 h-6" />
+                    </div>
+                    <span className="text-sm text-warm-700 tracking-wide">
+                      {locale === 'sq' ? badge.text_sq : badge.text_en}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}
