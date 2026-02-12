@@ -496,7 +496,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
 
       {/* Specs */}
       {specsList.length > 0 && (
-        <section className="py-12 md:py-24">
+        <section className="py-12 md:py-24 bg-warm-50">
           <div className="max-w-4xl mx-auto px-4 md:px-12">
             <h2 className="text-2xl md:text-3xl font-light mb-8 md:mb-12">
               {t('product.techSpecs')}
