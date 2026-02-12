@@ -76,6 +76,7 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
   badges: { icon: string; text_en: string; text_sq: string; sort_order: number }[];
   tagline_en: string | null;
   tagline_sq: string | null;
+  show_starting_at: boolean;
   productId: string | null;
   hero: {
     enabled: boolean;
@@ -129,6 +130,7 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
           }));
         const tagline_en = (product as unknown as Record<string, unknown>).tagline_en as string | null;
         const tagline_sq = (product as unknown as Record<string, unknown>).tagline_sq as string | null;
+        const show_starting_at = (product as unknown as Record<string, unknown>).show_starting_at !== false;
         const productId = (product as unknown as Record<string, unknown>).id as string;
         const p = product as unknown as Record<string, unknown>;
         const hero = p.hero_enabled ? {
@@ -139,13 +141,13 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
           subtitle_en: (p.hero_subtitle_en as string) || null,
           subtitle_sq: (p.hero_subtitle_sq as string) || null,
         } : null;
-        return { images, specs, variants, badges, tagline_en, tagline_sq, productId, hero };
+        return { images, specs, variants, badges, tagline_en, tagline_sq, show_starting_at, productId, hero };
       }
     } catch (e) {
       console.error('Failed to get images/specs from Supabase:', e);
     }
   }
-  return { images: [], specs: [], variants: [], badges: [], tagline_en: null, tagline_sq: null, productId: null, hero: null };
+  return { images: [], specs: [], variants: [], badges: [], tagline_en: null, tagline_sq: null, show_starting_at: true, productId: null, hero: null };
 }
 
 export interface StoryBlock {

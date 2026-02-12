@@ -41,6 +41,7 @@ export default function ProductEditPage() {
   const [isContactOnly, setIsContactOnly] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
+  const [showStartingAt, setShowStartingAt] = useState(true);
   const [taglineEn, setTaglineEn] = useState('');
   const [taglineSq, setTaglineSq] = useState('');
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
@@ -108,6 +109,7 @@ export default function ProductEditPage() {
     setIsContactOnly(data.is_contact_only);
     setIsFeatured(data.is_featured);
     setSortOrder(data.sort_order);
+    setShowStartingAt(data.show_starting_at !== false);
     setTaglineEn(data.tagline_en || '');
     setTaglineSq(data.tagline_sq || '');
     setFeaturedImageUrl(data.featured_image_url || '');
@@ -199,6 +201,7 @@ export default function ProductEditPage() {
         base_price: basePrice ? parseFloat(basePrice) : null,
         is_contact_only: isContactOnly,
         is_featured: isFeatured,
+        show_starting_at: showStartingAt,
         sort_order: sortOrder,
         featured_image_url: featuredImageUrl || null,
         hero_enabled: heroEnabled,
@@ -774,6 +777,10 @@ export default function ProductEditPage() {
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} className="rounded" />
             Featured
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={showStartingAt} onChange={(e) => setShowStartingAt(e.target.checked)} className="rounded" />
+            Show &quot;Starting at&quot;
           </label>
         </div>
       </section>

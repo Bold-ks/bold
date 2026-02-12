@@ -25,6 +25,7 @@ interface ProductDetailProps {
   badges?: Badge[];
   tagline_en?: string | null;
   tagline_sq?: string | null;
+  showStartingAt?: boolean;
   story?: ProductStory | null;
   hero?: {
     enabled: boolean;
@@ -72,7 +73,7 @@ function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: 
   return <>{icons[icon] || icons.star}</>;
 }
 
-export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq, story, hero }: ProductDetailProps) {
+export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq, showStartingAt = true, story, hero }: ProductDetailProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -105,7 +106,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
         key: locale === 'sq' ? s.spec_key_sq : s.spec_key_en,
         value: locale === 'sq' ? s.spec_value_sq : s.spec_value_en,
       }))
-    : Object.entries(product.specs).map(([key, value]) => ({ key, value }));
+    : Object.entries(product.specs || {}).map(([key, value]) => ({ key, value }));
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!lightboxOpen) return;
@@ -319,9 +320,11 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                       const displayPrice = variantPrice || product.price;
                       return displayPrice ? (
                         <>
-                          <p className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-2">
-                            {locale === 'sq' ? 'Duke filluar nga' : 'Starting at'}
-                          </p>
+                          {showStartingAt && (
+                            <p className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-2">
+                              {locale === 'sq' ? 'Duke filluar nga' : 'Starting at'}
+                            </p>
+                          )}
                           <p className="text-2xl md:text-3xl font-light">
                             €{displayPrice.toLocaleString()}
                           </p>
