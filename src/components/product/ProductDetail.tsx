@@ -279,9 +279,9 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
         </div>
       </section>
 
-      {/* Popular Variants + Service Badges — one seamless section with dividers */}
+      {/* Popular Variants + Service Badges — grayish container */}
       {((variantThumbnails && variantThumbnails.length > 1) || (badges && badges.length > 0)) && (
-        <section className="bg-white">
+        <section className="bg-warm-50">
           <div className="max-w-7xl mx-auto px-4 md:px-12">
             {/* Popular Variants */}
             {variantThumbnails && variantThumbnails.length > 1 && (
@@ -296,7 +296,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-warm-50">
+                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-white">
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
@@ -306,7 +306,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                             sizes="160px"
                           />
                         ) : (
-                          <div className="w-full h-full bg-warm-50" />
+                          <div className="w-full h-full bg-white" />
                         )}
                       </div>
                       <div className={`h-0.5 mt-2 transition-all ${
@@ -319,7 +319,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     href="/contact"
                     className="flex-shrink-0 group transition-all"
                   >
-                    <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-warm-50 flex flex-col items-center justify-center gap-2">
+                    <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-white flex flex-col items-center justify-center gap-2">
                       <svg className="w-5 h-5 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                       </svg>
