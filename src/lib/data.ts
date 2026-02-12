@@ -141,6 +141,8 @@ function mapSupabaseProduct(p: {
   product_specs?: Array<{ spec_key_sq: string; spec_value_sq: string }>;
   product_images?: Array<{ url: string; is_hero: boolean }>;
   featured_image_url?: string | null;
+  tagline_en?: string | null;
+  tagline_sq?: string | null;
 }): StaticProduct {
   const specs: Record<string, string> = {};
   p.product_specs?.forEach((s) => {
@@ -164,6 +166,7 @@ function mapSupabaseProduct(p: {
       hex: v.color_hex || '#000000',
     })),
     specs,
+    tagline: p.tagline_en || p.tagline_sq ? { en: p.tagline_en || '', sq: p.tagline_sq || '' } : undefined,
     featured: p.is_featured,
     heroImage: p.product_images?.find((img) => img.is_hero)?.url,
     featuredImage: p.featured_image_url || undefined,

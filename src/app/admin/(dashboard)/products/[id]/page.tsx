@@ -41,6 +41,8 @@ export default function ProductEditPage() {
   const [isContactOnly, setIsContactOnly] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
+  const [taglineEn, setTaglineEn] = useState('');
+  const [taglineSq, setTaglineSq] = useState('');
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
   const [showFeaturedMediaPicker, setShowFeaturedMediaPicker] = useState(false);
 
@@ -81,6 +83,8 @@ export default function ProductEditPage() {
     setIsContactOnly(data.is_contact_only);
     setIsFeatured(data.is_featured);
     setSortOrder(data.sort_order);
+    setTaglineEn(data.tagline_en || '');
+    setTaglineSq(data.tagline_sq || '');
     setFeaturedImageUrl(data.featured_image_url || '');
     setVariants(data.product_variants || []);
     setImages(data.product_images || []);
@@ -131,6 +135,8 @@ export default function ProductEditPage() {
         category_en: catEn,
         subcategory_sq: subcatSq || null,
         subcategory_en: subcatEn || null,
+        tagline_en: taglineEn || null,
+        tagline_sq: taglineSq || null,
         base_price: basePrice ? parseFloat(basePrice) : null,
         is_contact_only: isContactOnly,
         is_featured: isFeatured,
@@ -531,6 +537,11 @@ export default function ProductEditPage() {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Tagline (EN)" value={taglineEn} onChange={setTaglineEn} />
+          <Field label="Tagline (SQ)" value={taglineSq} onChange={setTaglineSq} />
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description (EN)</label>
           <textarea value={descEn} onChange={(e) => setDescEn(e.target.value)} rows={3} className="input-field" />
@@ -538,6 +549,11 @@ export default function ProductEditPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description (SQ)</label>
           <textarea value={descSq} onChange={(e) => setDescSq(e.target.value)} rows={3} className="input-field" />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Tagline (EN)" value={taglineEn} onChange={setTaglineEn} />
+          <Field label="Tagline (SQ)" value={taglineSq} onChange={setTaglineSq} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -21,6 +21,8 @@ export interface Database {
           sort_order: number;
           created_at: string;
           featured_image_url: string | null;
+          tagline_en: string | null;
+          tagline_sq: string | null;
           updated_at: string;
         };
         Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at'> & {

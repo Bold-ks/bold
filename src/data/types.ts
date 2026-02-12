@@ -19,6 +19,7 @@ export interface Product {
   price: number | null; // null = "Na kontaktoni"
   colors: ProductColor[];
   specs: Record<string, string>;
+  tagline?: { sq: string; en: string };
   featured?: boolean;
   heroImage?: string;
   featuredImage?: string;

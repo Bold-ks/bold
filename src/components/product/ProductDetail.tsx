@@ -22,6 +22,8 @@ interface ProductDetailProps {
   specs?: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
   variants?: { id: string; color_name: string; color_hex: string | null; price: number | null }[];
   badges?: Badge[];
+  tagline_en?: string | null;
+  tagline_sq?: string | null;
 }
 
 function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: string }) {
@@ -60,7 +62,7 @@ function BadgeIcon({ icon, className = 'w-6 h-6' }: { icon: string; className?: 
   return <>{icons[icon] || icons.star}</>;
 }
 
-export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges }: ProductDetailProps) {
+export function ProductDetail({ product, allImages, specs, variants: dbVariants, badges, tagline_en, tagline_sq }: ProductDetailProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -155,38 +157,40 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 </motion.div>
               </div>
 
-              {/* Dot indicators + arrows */}
+              {/* Dot indicators + arrows — dots left, arrows right (B&O style) */}
               {images.length > 1 && (
-                <div className="flex items-center justify-center gap-4 px-4 pb-6">
-                  <button
-                    onClick={() => setSelectedImageIndex((i) => Math.max(0, i - 1))}
-                    disabled={selectedImageIndex === 0}
-                    className="w-8 h-8 flex items-center justify-center text-warm-400 hover:text-black disabled:opacity-30 transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                  </button>
+                <div className="flex items-center justify-between px-6 md:px-8 pb-6">
                   <div className="flex items-center gap-2">
                     {images.map((_, i) => (
                       <button
                         key={i}
                         onClick={() => setSelectedImageIndex(i)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          i === selectedImageIndex ? 'bg-black w-6' : 'bg-warm-300 hover:bg-warm-400'
+                        className={`rounded-full transition-all ${
+                          i === selectedImageIndex ? 'w-2.5 h-2.5 bg-black' : 'w-1.5 h-1.5 bg-warm-300 hover:bg-warm-400'
                         }`}
                       />
                     ))}
                   </div>
-                  <button
-                    onClick={() => setSelectedImageIndex((i) => Math.min(images.length - 1, i + 1))}
-                    disabled={selectedImageIndex === images.length - 1}
-                    className="w-8 h-8 flex items-center justify-center text-warm-400 hover:text-black disabled:opacity-30 transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setSelectedImageIndex((i) => Math.max(0, i - 1))}
+                      disabled={selectedImageIndex === 0}
+                      className="w-10 h-10 flex items-center justify-center border border-warm-200 rounded-full text-warm-400 hover:text-black hover:border-warm-400 disabled:opacity-30 transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setSelectedImageIndex((i) => Math.min(images.length - 1, i + 1))}
+                      disabled={selectedImageIndex === images.length - 1}
+                      className="w-10 h-10 flex items-center justify-center border border-warm-200 rounded-full text-warm-400 hover:text-black hover:border-warm-400 disabled:opacity-30 transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -205,11 +209,15 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                   <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-tight mb-2">
                     {product.name}
                   </h1>
-                  {product.category && (
-                    <p className="text-warm-400 text-sm md:text-base mb-6 md:mb-8">
-                      {product.category}
-                    </p>
-                  )}
+                  {(() => {
+                    const tagline = product.tagline ? product.tagline[locale as 'sq' | 'en'] : null;
+                    const subtitle = tagline || product.category;
+                    return subtitle ? (
+                      <p className="text-warm-400 text-sm md:text-base mb-8 md:mb-10">
+                        {subtitle}
+                      </p>
+                    ) : null;
+                  })()}
 
                   {/* Colors with selected label */}
                   {(colorVariants ? colorVariants.length > 0 : product.colors.length > 0) && (
@@ -236,7 +244,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                   )}
 
                   {/* Description */}
-                  <p className="text-warm-600 leading-relaxed mb-6 md:mb-8 max-w-md text-sm md:text-base">
+                  <p className="text-warm-600 leading-[1.8] mb-8 md:mb-10 max-w-md text-sm md:text-base">
                     {product.description[locale as 'sq' | 'en']}
                   </p>
 
@@ -260,7 +268,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                   {/* CTA Button - B&O style */}
                   <Link
                     href="/contact"
-                    className="block w-full bg-black text-white py-4 text-sm tracking-[0.2em] uppercase text-center hover:bg-warm-800 transition-colors"
+                    className="inline-block bg-black text-white py-3.5 px-16 text-sm tracking-wide text-center hover:bg-warm-800 transition-colors rounded-sm"
                   >
                     {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
                   </Link>
@@ -281,33 +289,29 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 <h2 className="text-xs tracking-[0.25em] uppercase text-warm-400 mb-6">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex gap-4 md:gap-6 overflow-x-auto pb-2 -mx-1 px-1">
+                <div className="flex gap-3 md:gap-5 overflow-x-auto pb-2 -mx-1 px-1">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className={`relative w-28 h-28 md:w-36 md:h-36 overflow-hidden bg-warm-50 border-2 transition-all ${
-                        v.index === selectedColorIndex
-                          ? 'border-black'
-                          : 'border-transparent hover:border-warm-300'
-                      }`}>
+                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-warm-50">
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
                             alt={v.color_name}
                             fill
-                            className="object-contain p-2"
-                            sizes="144px"
+                            className="object-contain p-3"
+                            sizes="160px"
                           />
                         ) : (
                           <div className="w-full h-full bg-warm-50" />
                         )}
                       </div>
-                      <p className={`text-xs mt-2 text-center transition-colors ${
-                        v.index === selectedColorIndex ? 'text-black font-medium' : 'text-warm-500'
-                      }`}>{v.color_name}</p>
+                      <div className={`h-0.5 mt-2 transition-all ${
+                        v.index === selectedColorIndex ? 'bg-black' : 'bg-transparent'
+                      }`} />
                     </button>
                   ))}
                   {/* Compose yours card */}
@@ -315,14 +319,15 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     href="/contact"
                     className="flex-shrink-0 group transition-all"
                   >
-                    <div className="relative w-28 h-28 md:w-36 md:h-36 overflow-hidden bg-warm-50 border-2 border-transparent hover:border-warm-300 flex items-center justify-center transition-all">
-                      <svg className="w-6 h-6 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden bg-warm-50 flex flex-col items-center justify-center gap-2">
+                      <svg className="w-5 h-5 text-warm-400 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                       </svg>
+                      <span className="text-xs text-warm-400 group-hover:text-black transition-colors">
+                        {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
+                      </span>
                     </div>
-                    <p className="text-xs mt-2 text-center text-warm-500 group-hover:text-black transition-colors">
-                      {locale === 'sq' ? 'Personalizo' : 'Compose yours'}
-                    </p>
+                    <div className="h-0.5 mt-2 bg-transparent" />
                   </Link>
                 </div>
               </div>
