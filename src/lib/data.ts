@@ -74,6 +74,8 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
   specs: { spec_key_sq: string; spec_key_en: string; spec_value_sq: string; spec_value_en: string }[];
   variants: { id: string; color_name: string; color_hex: string | null; price: number | null }[];
   badges: { icon: string; text_en: string; text_sq: string; sort_order: number }[];
+  tagline_en: string | null;
+  tagline_sq: string | null;
 }> {
   if (isSupabaseConfigured) {
     try {
@@ -116,13 +118,15 @@ export async function getProductImagesAndSpecs(slug: string): Promise<{
             text_sq: b.text_sq,
             sort_order: b.sort_order,
           }));
-        return { images, specs, variants, badges };
+        const tagline_en = (product as unknown as Record<string, unknown>).tagline_en as string | null;
+        const tagline_sq = (product as unknown as Record<string, unknown>).tagline_sq as string | null;
+        return { images, specs, variants, badges, tagline_en, tagline_sq };
       }
     } catch (e) {
       console.error('Failed to get images/specs from Supabase:', e);
     }
   }
-  return { images: [], specs: [], variants: [], badges: [] };
+  return { images: [], specs: [], variants: [], badges: [], tagline_en: null, tagline_sq: null };
 }
 
 // Map Supabase product to static product shape for backwards compatibility
