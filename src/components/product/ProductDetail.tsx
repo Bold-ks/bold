@@ -544,12 +544,12 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+            className="fixed inset-0 z-[100] bg-white flex items-center justify-center"
             onClick={() => setLightboxOpen(false)}
           >
             <button
               onClick={() => setLightboxOpen(false)}
-              className="absolute top-4 right-4 md:top-8 md:right-8 text-white/70 hover:text-white text-2xl z-10"
+              className="absolute top-4 right-4 md:top-8 md:right-8 text-warm-400 hover:text-black text-2xl z-10"
             >
               ✕
             </button>
@@ -559,7 +559,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 {selectedImageIndex > 0 && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setSelectedImageIndex((i) => i - 1); }}
-                    className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl z-10"
+                    className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-warm-400 hover:text-black text-3xl z-10"
                   >
                     ‹
                   </button>
@@ -567,7 +567,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 {selectedImageIndex < images.length - 1 && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setSelectedImageIndex((i) => i + 1); }}
-                    className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl z-10"
+                    className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-warm-400 hover:text-black text-3xl z-10"
                   >
                     ›
                   </button>
@@ -599,7 +599,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     key={i}
                     onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(i); }}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === selectedImageIndex ? 'bg-white w-6' : 'bg-white/40 hover:bg-white/60'
+                      i === selectedImageIndex ? 'bg-black w-6' : 'bg-warm-300 hover:bg-warm-400'
                     }`}
                   />
                 ))}
