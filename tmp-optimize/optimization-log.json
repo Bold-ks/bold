@@ -1,0 +1,359 @@
+[
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/53a914aa-4b16-4335-b272-18906583abf7/story/1770971602574.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/53a914aa-4b16-4335-b272-18906583abf7/story/1770971602574.webp",
+    "oldSize": 46646570,
+    "newSize": 252990,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968472093.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968472093.webp",
+    "oldSize": 43407720,
+    "newSize": 294224,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903593668.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903593668.webp",
+    "oldSize": 27945919,
+    "newSize": 152238,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904980909.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904980909.webp",
+    "oldSize": 27945919,
+    "newSize": 152238,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904290975.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904290975.webp",
+    "oldSize": 27945919,
+    "newSize": 152238,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904962983.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904962983.webp",
+    "oldSize": 22800511,
+    "newSize": 111722,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903586488.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903586488.webp",
+    "oldSize": 22800511,
+    "newSize": 111722,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904276665.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904276665.webp",
+    "oldSize": 22800511,
+    "newSize": 111722,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770884671362.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770884671362.webp",
+    "oldSize": 21544765,
+    "newSize": 522808,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903557014.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903557014.webp",
+    "oldSize": 20528685,
+    "newSize": 143088,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770967659772.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770967659772.webp",
+    "oldSize": 19375850,
+    "newSize": 630966,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903949496.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903949496.webp",
+    "oldSize": 19307028,
+    "newSize": 102984,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903541220.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903541220.webp",
+    "oldSize": 18865427,
+    "newSize": 106386,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2345ad6b-e609-4499-b491-65ba520b9cfb/1770967730000.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2345ad6b-e609-4499-b491-65ba520b9cfb/1770967730000.webp",
+    "oldSize": 18838830,
+    "newSize": 615338,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903927963.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903927963.webp",
+    "oldSize": 18039492,
+    "newSize": 90032,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904324561.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904324561.webp",
+    "oldSize": 17641437,
+    "newSize": 129288,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770905046492.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770905046492.webp",
+    "oldSize": 17641437,
+    "newSize": 129288,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903702896.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903702896.webp",
+    "oldSize": 17641437,
+    "newSize": 129288,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905444228.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905444228.webp",
+    "oldSize": 15412161,
+    "newSize": 212548,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903691833.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903691833.webp",
+    "oldSize": 14419264,
+    "newSize": 117358,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905431885.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905431885.webp",
+    "oldSize": 13925528,
+    "newSize": 200236,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770904073938.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770904073938.webp",
+    "oldSize": 13524391,
+    "newSize": 87536,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967867769.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967867769.webp",
+    "oldSize": 12854581,
+    "newSize": 273858,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967985428.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967985428.webp",
+    "oldSize": 12854581,
+    "newSize": 273858,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905766164.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905766164.webp",
+    "oldSize": 11184591,
+    "newSize": 155888,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903598569.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903598569.webp",
+    "oldSize": 10729713,
+    "newSize": 39788,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903629043.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770903629043.webp",
+    "oldSize": 10729713,
+    "newSize": 39788,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904309012.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770904309012.webp",
+    "oldSize": 10729713,
+    "newSize": 39788,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770905034661.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/f7ede505-a8bd-4424-90af-60aa617665e7/1770905034661.webp",
+    "oldSize": 10729713,
+    "newSize": 39788,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967976219.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/89d6d5bc-d3e4-4f79-85ef-8581a5d398f9/1770967976219.webp",
+    "oldSize": 10727095,
+    "newSize": 157208,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770884625870.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770884625870.webp",
+    "oldSize": 10115966,
+    "newSize": 268590,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770967673282.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2ebf2790-f097-4b8b-a12d-87d69d313d12/1770967673282.webp",
+    "oldSize": 9897182,
+    "newSize": 243054,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2345ad6b-e609-4499-b491-65ba520b9cfb/1770884609298.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/2345ad6b-e609-4499-b491-65ba520b9cfb/1770884609298.webp",
+    "oldSize": 9824716,
+    "newSize": 249404,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770967693000.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770967693000.webp",
+    "oldSize": 8138347,
+    "newSize": 78690,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905456819.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/11bd7d1c-3c8a-4062-883b-70250087e46b/1770905456819.webp",
+    "oldSize": 8068185,
+    "newSize": 30656,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903963966.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/5d85170f-d20e-4fc8-9dd7-0ed9a8b01e80/1770903963966.webp",
+    "oldSize": 8068185,
+    "newSize": 30656,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903571790.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/variants/672fb990-7cc2-4882-ab4a-1771c5f714a1/1770903571790.webp",
+    "oldSize": 7851488,
+    "newSize": 34242,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770884365661.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770884365661.webp",
+    "oldSize": 7248570,
+    "newSize": 104372,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770967705562.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/variants/07810afd-da05-4bb9-a4cd-d50f3f5179d8/1770967705562.webp",
+    "oldSize": 6995075,
+    "newSize": 55592,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968078900.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968078900.webp",
+    "oldSize": 6808129,
+    "newSize": 352556,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1770839666559.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1770839666559.webp",
+    "oldSize": 6382623,
+    "newSize": 379106,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968067085.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968067085.webp",
+    "oldSize": 6069417,
+    "newSize": 482636,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968140289.png",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/story/1770968140289.webp",
+    "oldSize": 5582421,
+    "newSize": 228064,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3c8a0411-bdbf-40dc-921c-197a0123e3a7/hero-bg-1770885198129.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3c8a0411-bdbf-40dc-921c-197a0123e3a7/hero-bg-1770885198129.mp4",
+    "oldSize": 69803363,
+    "newSize": 550293,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/3464ca8c-ed91-482c-a133-89a41a00c12b/hero-bg-1771025882063.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/products/optimized/3464ca8c-ed91-482c-a133-89a41a00c12b/hero-bg-1771025882063.mp4",
+    "oldSize": 67258098,
+    "newSize": 528441,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1770838846222.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1770838846222.mp4",
+    "oldSize": 31479757,
+    "newSize": 1177914,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/uploads/1770836182849-Sound Elevated 2025 Motion EN 30s  800x418 Clean 0312.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/uploads/1770836182849-Sound%20Elevated%202025%20Motion%20EN%2030s%20%20800x418%20Clean%200312.mp4",
+    "oldSize": 31479757,
+    "newSize": 1177914,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1770850166892.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1770850166892.mp4",
+    "oldSize": 31479757,
+    "newSize": 1177914,
+    "refs": 1
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1771026082122.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1771026082122.mp4",
+    "oldSize": 27065576,
+    "newSize": 401899,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1770844236443.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1770844236443.mp4",
+    "oldSize": 4301945,
+    "newSize": 3020311,
+    "refs": 2
+  },
+  {
+    "oldUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/content/1770843108218.mp4",
+    "newUrl": "https://faxrokxcygmqpxrvesoc.supabase.co/storage/v1/object/public/site/optimized/content/1770843108218.mp4",
+    "oldSize": 1845874,
+    "newSize": 1621350,
+    "refs": 2
+  }
+]

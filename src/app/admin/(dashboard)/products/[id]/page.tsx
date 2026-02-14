@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import type { Media } from '@/lib/supabase/types';
+import { compressFile } from '@/lib/compress';
 
 function slugify(text: string): string {
   return text
@@ -383,17 +384,21 @@ export default function ProductEditPage() {
     }
 
     const supabase = createAdminClient();
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
       if (file.size > 100 * 1024 * 1024) {
         toast.error(`${file.name} is too large (max 100MB)`);
         continue;
       }
 
+      // Compress image before upload
+      const originalName = file.name;
+      file = await compressFile(file);
+
       const ext = file.name.split('.').pop();
       const path = `${id}/${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
       if (uploadError) {
-        toast.error(`Failed to upload ${file.name}`);
+        toast.error(`Failed to upload ${originalName}`);
         continue;
       }
 
@@ -490,17 +495,20 @@ export default function ProductEditPage() {
     }
 
     const supabase = createAdminClient();
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
       if (file.size > 100 * 1024 * 1024) {
         toast.error(`${file.name} is too large (max 100MB)`);
         continue;
       }
 
+      const originalName = file.name;
+      file = await compressFile(file);
+
       const ext = file.name.split('.').pop();
       const path = `${id}/variants/${variantId}/${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage.from('products').upload(path, file);
       if (uploadError) {
-        toast.error(`Failed to upload ${file.name}`);
+        toast.error(`Failed to upload ${originalName}`);
         continue;
       }
 
@@ -614,8 +622,9 @@ export default function ProductEditPage() {
                         accept="image/*,video/*"
                         className="hidden"
                         onChange={async (e) => {
-                          const file = e.target.files?.[0];
+                          let file = e.target.files?.[0];
                           if (!file) return;
+                          file = await compressFile(file);
                           const supabase = createAdminClient();
                           const ext = file.name.split('.').pop();
                           const path = `${id}/hero-bg-${Date.now()}.${ext}`;
@@ -829,9 +838,10 @@ export default function ProductEditPage() {
                   accept="image/*"
                   className="hidden"
                   onChange={async (e) => {
-                    const file = e.target.files?.[0];
+                    let file = e.target.files?.[0];
                     if (!file) return;
                     if (file.size > 100 * 1024 * 1024) { toast.error('File too large (max 100MB)'); return; }
+                    file = await compressFile(file);
                     const supabase = createAdminClient();
                     const ext = file.name.split('.').pop();
                     const path = `${id}/featured-${Date.now()}.${ext}`;
@@ -1198,8 +1208,9 @@ export default function ProductEditPage() {
                             accept="image/*,video/*"
                             className="hidden"
                             onChange={async (e) => {
-                              const file = e.target.files?.[0];
+                              let file = e.target.files?.[0];
                               if (!file) return;
+                              file = await compressFile(file);
                               const supabase = createAdminClient();
                               const ext = file.name.split('.').pop();
                               const path = `${id}/story/${Date.now()}.${ext}`;

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { createAdminClient } from '@/lib/supabase/admin-client';
 import type { Media } from '@/lib/supabase/types';
 import toast from 'react-hot-toast';
+import { compressFile } from '@/lib/compress';
 
 export default function MediaPage() {
   const [media, setMedia] = useState<Media[]>([]);
@@ -95,12 +96,15 @@ export default function MediaPage() {
     const supabase = createAdminClient();
     let count = 0;
 
-    for (const file of Array.from(files)) {
+    for (let file of Array.from(files)) {
       const maxSize = file.type.startsWith('video/') ? 500 * 1024 * 1024 : 100 * 1024 * 1024;
       if (file.size > maxSize) {
         toast.error(`${file.name} too large`);
         continue;
       }
+
+      // Compress images before upload
+      file = await compressFile(file);
 
       const path = `uploads/${Date.now()}-${file.name}`;
       const bucket = file.type.startsWith('video/') ? 'site' : 'products';
