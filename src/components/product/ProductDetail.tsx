@@ -79,6 +79,32 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isSwipe = Math.abs(distance) > minSwipeDistance;
+    if (isSwipe) {
+      if (distance > 0 && selectedImageIndex < images.length - 1) {
+        setSelectedImageIndex((i) => i + 1);
+      } else if (distance < 0 && selectedImageIndex > 0) {
+        setSelectedImageIndex((i) => i - 1);
+      }
+    }
+  };
 
   const colorVariants = dbVariants && dbVariants.length > 0 ? dbVariants : null;
   const selectedVariantId = colorVariants ? colorVariants[selectedColorIndex]?.id : null;
@@ -206,6 +232,9 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
               <div
                 className="relative flex-1 min-h-[50vh] lg:min-h-0 flex items-center justify-center cursor-zoom-in p-4 md:p-8"
                 onClick={() => images.length > 0 && setLightboxOpen(true)}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
               >
                 <motion.div
                   key={`${selectedColorIndex}-${selectedImageIndex}`}
