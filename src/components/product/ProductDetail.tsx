@@ -611,6 +611,9 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
               transition={{ duration: 0.2 }}
               className="relative w-[90vw] h-[80vh] max-w-4xl"
               onClick={(e) => e.stopPropagation()}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
             >
               <Image
                 src={images[selectedImageIndex]}
