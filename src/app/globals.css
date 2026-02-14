@@ -25,6 +25,15 @@
   }
 }
 
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Hide native video controls on all browsers including iOS Safari */
 video.bg-video {
   object-fit: cover;

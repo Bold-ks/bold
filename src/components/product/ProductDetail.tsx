@@ -367,14 +367,14 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                 <h2 className="text-sm font-medium mb-4 text-center">
                   {locale === 'sq' ? 'Variantet popullore' : 'Popular variants'}
                 </h2>
-                <div className="flex items-end justify-center gap-6 md:gap-10">
+                <div className="flex items-end justify-start md:justify-center gap-4 md:gap-10 overflow-x-auto pb-2 scrollbar-hide">
                   {variantThumbnails.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setSelectedColorIndex(v.index)}
                       className="flex-shrink-0 group transition-all"
                     >
-                      <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden">
+                      <div className="relative w-16 h-16 md:w-24 md:h-24 overflow-hidden">
                         {v.thumbnail ? (
                           <Image
                             src={v.thumbnail}
@@ -397,7 +397,7 @@ export function ProductDetail({ product, allImages, specs, variants: dbVariants,
                     href="/contact"
                     className="flex-shrink-0 group transition-all"
                   >
-                    <div className="relative w-20 h-20 md:w-24 md:h-24 border border-warm-200 flex flex-col items-center justify-center gap-1.5">
+                    <div className="relative w-16 h-16 md:w-24 md:h-24 border border-warm-200 flex flex-col items-center justify-center gap-1.5">
                       <svg className="w-4 h-4 text-warm-500 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                       </svg>
