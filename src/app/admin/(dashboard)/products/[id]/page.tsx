@@ -43,6 +43,7 @@ export default function ProductEditPage() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
   const [showStartingAt, setShowStartingAt] = useState(true);
+  const [variantPricing, setVariantPricing] = useState(false);
   const [taglineEn, setTaglineEn] = useState('');
   const [taglineSq, setTaglineSq] = useState('');
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
@@ -120,7 +121,9 @@ export default function ProductEditPage() {
     setHeroTitleSq(data.hero_title_sq || '');
     setHeroSubtitleEn(data.hero_subtitle_en || '');
     setHeroSubtitleSq(data.hero_subtitle_sq || '');
-    setVariants(data.product_variants || []);
+    const loadedVariants = data.product_variants || [];
+    setVariants(loadedVariants);
+    setVariantPricing(loadedVariants.some((v: ProductVariant) => v.price != null));
     setImages(data.product_images || []);
     setSpecs(data.product_specs || []);
     setBadges((data.product_badges || []).sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order));
@@ -791,6 +794,10 @@ export default function ProductEditPage() {
             <input type="checkbox" checked={showStartingAt} onChange={(e) => setShowStartingAt(e.target.checked)} className="rounded" />
             Show &quot;Starting at&quot;
           </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={variantPricing} onChange={(e) => setVariantPricing(e.target.checked)} className="rounded" />
+            Variant Pricing
+          </label>
         </div>
       </section>
 
@@ -932,17 +939,19 @@ export default function ProductEditPage() {
                     className="input-field w-24"
                   />
                 </div>
-                <input
-                  value={v.price?.toString() || ''}
-                  onChange={(e) => {
-                    const updated = [...variants];
-                    updated[i] = { ...updated[i], price: e.target.value ? parseFloat(e.target.value) : null };
-                    setVariants(updated);
-                  }}
-                  placeholder="Price override"
-                  type="number"
-                  className="input-field w-32"
-                />
+                {variantPricing && (
+                  <input
+                    value={v.price?.toString() || ''}
+                    onChange={(e) => {
+                      const updated = [...variants];
+                      updated[i] = { ...updated[i], price: e.target.value ? parseFloat(e.target.value) : null };
+                      setVariants(updated);
+                    }}
+                    placeholder="Price (€)"
+                    type="number"
+                    className="input-field w-32"
+                  />
+                )}
                 <button
                   onClick={() => {
                     setVariants(variants.filter((_, j) => j !== i));
