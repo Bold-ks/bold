@@ -73,12 +73,12 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Image
-              src="/bold-logo.jpg"
+              src="/bold-logo.png"
               alt="Bold"
               width={1600}
-              height={1000}
+              height={1002}
               className="h-7 w-auto mb-4"
-              style={{ filter: 'invert(1)', mixBlendMode: 'screen' }}
+              style={{ filter: 'invert(1)' }}
             />
             <p className="text-warm-400 text-sm leading-relaxed">
               {description}

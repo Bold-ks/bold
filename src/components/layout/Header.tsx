@@ -36,13 +36,12 @@ export function Header() {
         <div className="flex items-center justify-between px-4 md:px-12 h-14 md:h-16">
           <Link href="/" aria-label="Bold" className="flex items-center">
             <Image
-              src="/bold-logo.jpg"
+              src="/bold-logo.png"
               alt="Bold"
               width={1600}
-              height={1000}
+              height={1002}
               priority
               className="h-6 md:h-7 w-auto"
-              style={{ mixBlendMode: 'multiply' }}
             />
           </Link>
 
