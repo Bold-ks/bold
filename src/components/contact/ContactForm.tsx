@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
-import { createClient } from '@/lib/supabase/client';
+import { createAdminClient } from '@/lib/supabase/admin-client';
 
 export function ContactForm() {
   const t = useTranslations('contact');
@@ -22,7 +22,10 @@ export function ContactForm() {
     }
     setSubmitting(true);
     try {
-      const supabase = createClient();
+      // createAdminClient is just an untyped browser client with the anon key
+      // (the name is a misnomer in this codebase). We use it here because the
+      // contact_submissions table isn't in the generated Database types yet.
+      const supabase = createAdminClient();
       const { error } = await supabase.from('contact_submissions').insert({
         name: name.trim(),
         email: email.trim(),
