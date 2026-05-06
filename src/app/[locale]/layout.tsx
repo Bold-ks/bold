@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Outfit } from 'next/font/google';
 import '../globals.css';
+import { Toaster } from 'react-hot-toast';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CookieConsent } from '@/components/ui/CookieConsent';
@@ -42,6 +43,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <main className="min-h-screen">{children}</main>
           <Footer />
           <CookieConsent />
+          <Toaster position="bottom-center" />
         </NextIntlClientProvider>
       </body>
     </html>

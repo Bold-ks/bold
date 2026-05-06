@@ -70,7 +70,11 @@
     "message": "Mesazhi",
     "send": "Dërgo",
     "address": "Adresa",
-    "workingHours": "Orari i punës"
+    "workingHours": "Orari i punës",
+    "sending": "Duke dërguar...",
+    "successMessage": "Faleminderit, do t'ju kontaktojmë së shpejti.",
+    "errorRequired": "Ju lutemi plotësoni emrin, email-in dhe mesazhin.",
+    "errorGeneric": "Diçka shkoi keq. Ju lutemi provoni përsëri."
   },
   "about": {
     "title": "Rreth Bold",

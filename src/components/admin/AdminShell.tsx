@@ -11,6 +11,7 @@ const navItems = [
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/media', label: 'Media' },
   { href: '/admin/content', label: 'Content' },
+  { href: '/admin/contacts', label: 'Contacts' },
   { href: '/admin/settings', label: 'Settings' },
 ];
 

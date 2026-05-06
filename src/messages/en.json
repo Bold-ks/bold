@@ -70,7 +70,11 @@
     "message": "Message",
     "send": "Send",
     "address": "Address",
-    "workingHours": "Working hours"
+    "workingHours": "Working hours",
+    "sending": "Sending...",
+    "successMessage": "Thanks, we'll get back to you shortly.",
+    "errorRequired": "Please fill in name, email, and message.",
+    "errorGeneric": "Something went wrong. Please try again."
   },
   "about": {
     "title": "About Bold",
