@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,8 +34,16 @@ export function Header() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-warm-100">
         <div className="flex items-center justify-between px-4 md:px-12 h-14 md:h-16">
-          <Link href="/" className="text-lg md:text-xl font-semibold tracking-[0.3em] uppercase">
-            Bold
+          <Link href="/" aria-label="Bold" className="flex items-center">
+            <Image
+              src="/bold-logo.jpg"
+              alt="Bold"
+              width={1600}
+              height={1000}
+              priority
+              className="h-6 md:h-7 w-auto"
+              style={{ mixBlendMode: 'multiply' }}
+            />
           </Link>
 
           {/* Desktop nav */}

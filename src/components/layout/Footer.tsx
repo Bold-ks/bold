@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useEffect, useState } from 'react';
@@ -71,7 +72,14 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-semibold tracking-[0.3em] uppercase mb-4">Bold</h3>
+            <Image
+              src="/bold-logo.jpg"
+              alt="Bold"
+              width={1600}
+              height={1000}
+              className="h-7 w-auto mb-4"
+              style={{ filter: 'invert(1)', mixBlendMode: 'screen' }}
+            />
             <p className="text-warm-400 text-sm leading-relaxed">
               {description}
             </p>
